@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
-import Main from "./Main";
-import { View, Text } from 'react-native';
+import { View, Text, Button } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import HomeScreen from "./screens/HomeScreen";
 
@@ -36,7 +35,7 @@ export function App() {
     if (initializing) return null;
 
     if (!user) {
-        auth()
+        /*auth()
             .createUserWithEmailAndPassword('jane.doe@example.com', 'SuperSecretPassword!')
             .then(() => {
                 console.log('User account created & signed in!');
@@ -52,17 +51,25 @@ export function App() {
 
                 console.error(error);
             });
+
+
         return (
             <View>
                 <Text>Login</Text>
             </View>
         );
+
+         */
+
+        console.log('No user here')
     }
 
     return (
-        <View>
-            <HomeScreen name={user.email}/>
-        </View>
+        <PaperProvider>
+            <View>
+                <HomeScreen name={user.email}/>
+            </View>
+        </PaperProvider>
     );
 }
 

@@ -1,11 +1,10 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Button } from 'react-native';
 
 export function HomeScreen(props) {
     return (
         <View style={styles.container}>
-            <Text>You have sucessfully logged in!</Text>
-            <Text>Welcome {props.name}</Text>
+            <Text>{'You have sucessfully logged in! \n Welcome back \n' + props.name}</Text>
         </View>
     );
 }
