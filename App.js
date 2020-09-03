@@ -3,6 +3,7 @@ import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import Main from "./Main";
 import { View, Text } from 'react-native';
 import auth from '@react-native-firebase/auth';
+import HomeScreen from "./screens/HomeScreen";
 
 /*
 const theme = {
@@ -34,24 +35,23 @@ export function App() {
 
     if (initializing) return null;
 
-    auth()
-        .createUserWithEmailAndPassword('jane.doe@example.com', 'SuperSecretPassword!')
-        .then(() => {
-            console.log('User account created & signed in!');
-        })
-        .catch(error => {
-            if (error.code === 'auth/email-already-in-use') {
-                console.log('That email address is already in use!');
-            }
-
-            if (error.code === 'auth/invalid-email') {
-                console.log('That email address is invalid!');
-            }
-
-            console.error(error);
-        });
-
     if (!user) {
+        auth()
+            .createUserWithEmailAndPassword('jane.doe@example.com', 'SuperSecretPassword!')
+            .then(() => {
+                console.log('User account created & signed in!');
+            })
+            .catch(error => {
+                if (error.code === 'auth/email-already-in-use') {
+                    console.log('That email address is already in use!');
+                }
+
+                if (error.code === 'auth/invalid-email') {
+                    console.log('That email address is invalid!');
+                }
+
+                console.error(error);
+            });
         return (
             <View>
                 <Text>Login</Text>
@@ -59,11 +59,9 @@ export function App() {
         );
     }
 
-
-
     return (
         <View>
-            <Text>Welcome {user.email}</Text>
+            <HomeScreen name={user.email}/>
         </View>
     );
 }
