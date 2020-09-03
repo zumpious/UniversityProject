@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "722684596151",
+    "firebase_url": "https://myplaces-ca127.firebaseio.com",
+    "project_id": "myplaces-ca127",
+    "storage_bucket": "myplaces-ca127.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:722684596151:android:f68dfb28ca80dc6496a232",
+        "android_client_info": {
+          "package_name": "com.universityproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "722684596151-qg41kr4qegh676h276tro53ki1bkoocb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.universityproject",
+            "certificate_hash": "3a115494eddc17a3a149c02e40ac663c9e877818"
+          }
+        },
+        {
+          "client_id": "722684596151-61i7c3d94mfer6m5a1khoquhfdv1idm8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7unwRbVMZEgnH7zPfrvYbh71_LEwPrx0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "722684596151-61i7c3d94mfer6m5a1khoquhfdv1idm8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
