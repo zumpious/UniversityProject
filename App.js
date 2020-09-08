@@ -1,4 +1,7 @@
+import 'react-native-gesture-handler';
 import React, {useState, useEffect} from 'react';
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator} from "@react-navigation/stack";
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import { View, Text, Button } from 'react-native';
 import auth from '@react-native-firebase/auth';
