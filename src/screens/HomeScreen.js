@@ -1,10 +1,12 @@
 import React from 'react';
-import { View, Text, StyleSheet, Button } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 
-export function HomeScreen(props, extraData) {
+export function HomeScreen({route, navigation}) {
+    const { user } = route.params;
+    console.log(user);
     return (
         <View style={styles.container}>
-            <Text>{'You have sucessfully logged in! \n Welcome back \n' + props.extraData.email}</Text>
+            <Text>{'You have sucessfully logged in! \n Welcome back \n' + user.name}</Text>
         </View>
     );
 }

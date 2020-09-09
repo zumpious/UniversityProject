@@ -9,7 +9,6 @@ import RegisterScreen from "./src/screens/RegisterScreen";
 import { decode, encode } from 'base-64';
 
 /*
-
 const theme = {
     ...DefaultTheme,
     colors: {
@@ -36,13 +35,12 @@ export function App() {
         <NavigationContainer>
             <Stack.Navigator>
                 { user ? (
-                    <Stack.Screen name="Home">
-                        {props => <HomeScreen {...props} extraData={user} />}
-                    </Stack.Screen>
+                    <Stack.Screen name="Home" component={HomeScreen}/>
                 ) : (
                     <>
                         <Stack.Screen name="Login" component={LoginScreen} />
                         <Stack.Screen name="Registration" component={RegisterScreen} />
+                        <Stack.Screen name="Home" component={HomeScreen} />
                     </>
                 )}
             </Stack.Navigator>

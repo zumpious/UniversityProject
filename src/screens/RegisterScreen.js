@@ -29,13 +29,11 @@ export default function RegistrationScreen({navigation}) {
                     email: email,
                     name: fullName
                 };
-                console.log(response.user.uid);
                 firestore()
                         .collection('Users')
                         .doc(uid)
                         .set(data)
                         .then(() => {
-                            console.log('user added');
                             navigation.navigate('Home', {user: data});
                         })
                         .catch((error) => {
