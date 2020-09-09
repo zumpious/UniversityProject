@@ -30,15 +30,15 @@ export default function RegistrationScreen({navigation}) {
                     name: fullName
                 };
                 firestore()
-                        .collection('Users')
+                    .collection('Users')
                         .doc(uid)
                         .set(data)
-                        .then(() => {
-                            navigation.navigate('Home', {user: data});
-                        })
-                        .catch((error) => {
-                            alert(error)
-                        });
+                    .then(() => {
+                        navigation.navigate('Home', {user: data});
+                    })
+                    .catch((error) => {
+                        alert(error)
+                    });
             })
             .catch((error) => {
                 alert(error)
