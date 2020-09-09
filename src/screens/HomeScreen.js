@@ -1,9 +1,9 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-export function HomeScreen({route, navigation}) {
-    const { user } = route.params;
-    console.log(user);
+export function HomeScreen(props) {
+    const user  = props.extraData;
+
     return (
         <View style={styles.container}>
             <Text>{'You have sucessfully logged in! \n Welcome back \n' + user.name}</Text>

@@ -7,6 +7,8 @@ import LoginScreen from "./src/screens/LoginScreen";
 import HomeScreen from "./src/screens/HomeScreen";
 import RegisterScreen from "./src/screens/RegisterScreen";
 import { decode, encode } from 'base-64';
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 
 /*
 const theme = {
@@ -31,16 +33,45 @@ export function App() {
     const [loading, setLoading] = useState(true);
     const [user, setUser] = useState(null);
 
+    useEffect(() => {
+        const usersRef = firestore().collection('Users');
+        auth().onAuthStateChanged(user => {
+            if (user) {
+                usersRef
+                    .doc(user.uid)
+                    .get()
+                    .then((document) => {
+                        const userData = document.data()
+                        setLoading(false)
+                        setUser(userData)
+                    })
+                    .catch((error) => {
+                        setLoading(false)
+                    });
+            } else {
+                setLoading(false)
+            }
+        });
+    }, []);
+
+    if (loading) {
+        return (
+            <></>
+        )
+    }
+
     return (
         <NavigationContainer>
             <Stack.Navigator>
                 { user ? (
-                    <Stack.Screen name="Home" component={HomeScreen}/>
+                    <Stack.Screen name="Home">
+                        {props => <HomeScreen {...props} extraData={user} />}
+                    </Stack.Screen>
                 ) : (
                     <>
                         <Stack.Screen name="Login" component={LoginScreen} />
                         <Stack.Screen name="Registration" component={RegisterScreen} />
-                        <Stack.Screen name="Home" options={{ headerShown: false }} component={HomeScreen} />
+                        <Stack.Screen name="Home" component={HomeScreen} />
                     </>
                 )}
             </Stack.Navigator>
