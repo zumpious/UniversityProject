@@ -1,13 +1,29 @@
 import React from 'react';
+import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
+import auth from '@react-native-firebase/auth';
 import { View, Text, StyleSheet } from 'react-native';
+import {Button} from "react-native-paper";
 
 export function HomeScreen(props) {
     const user  = props.extraData;
 
     return (
-        <View style={styles.container}>
-            <Text>{'You have sucessfully logged in! \n Welcome back \n' + user.name}</Text>
-        </View>
+        <PaperProvider>
+            <View style={styles.container}>
+                <Text>{'You have sucessfully logged in! \n Welcome back \n' + user.name}</Text>
+                <Button icon="camera" mode="contained" onPress={() => {
+                    console.log('test');
+                    auth()
+                        .signOut()
+                        .then(() => console.log('user signed out'))
+                        .catch((error) => {
+                            alert(error);
+                        });
+                }}>
+                    Press Me
+                </Button>
+            </View>
+        </PaperProvider>
     );
 }
 

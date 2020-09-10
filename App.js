@@ -2,10 +2,10 @@ import 'react-native-gesture-handler';
 import React, {useState, useEffect} from 'react';
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator} from "@react-navigation/stack";
-//import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import LoginScreen from "./src/screens/LoginScreen";
 import HomeScreen from "./src/screens/HomeScreen";
 import RegisterScreen from "./src/screens/RegisterScreen";
+import LoadingScreen from "./src/screens/LoadingScreen";
 import { decode, encode } from 'base-64';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
@@ -56,7 +56,7 @@ export function App() {
 
     if (loading) {
         return (
-            <></>
+            <LoadingScreen />
         )
     }
 
