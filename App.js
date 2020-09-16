@@ -9,6 +9,8 @@ import LoadingScreen from "./src/screens/LoadingScreen";
 import { decode, encode } from 'base-64';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
+import AuthNavigator from './src/navigation/AuthNavigator'
+
 
 /*
 const theme = {
@@ -22,7 +24,7 @@ const theme = {
     }
 }
 */
-
+/*
 if (!global.btoa) {  global.btoa = encode }
 if (!global.atob) { global.atob = decode }
 
@@ -78,5 +80,11 @@ export function App() {
         </NavigationContainer>
     );
 }
+*/
 
-export default App;
+const App = () => {
+    return <AuthNavigator />
+}
+
+export default App
+

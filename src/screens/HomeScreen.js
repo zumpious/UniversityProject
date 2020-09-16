@@ -1,26 +1,47 @@
-import React from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import auth from '@react-native-firebase/auth';
 import { View, Text, StyleSheet } from 'react-native';
 import { Button } from "react-native-paper";
-import { useNavigation } from '@react-navigation/native'
+//import { useNavigation } from '@react-navigation/native'
+import { AuthContext } from "../navigation/AuthNavigator";
+import firestore from "@react-native-firebase/firestore";
+import {get} from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 
 export function HomeScreen(props) {
-    console.log(props.route.params.user.name);
-    const user  = props.userData;
-    const navigation = useNavigation();
+    const [userName, setUserName] = useState('')
+
+    const user = useContext(AuthContext);
+
+    useEffect(() =>  {
+        const uid = user.uid
+        firestore()
+            .collection('Users')
+            .doc(uid)
+            .get()
+            .then(firestoreDocument => {
+                if (!firestoreDocument.exists) {
+                    alert("User does not exist anymore.")
+                    return;
+                }
+                const data = firestoreDocument.data()
+                setUserName(data.name);
+            })
+            .catch(error => {
+                alert(error)
+            });
+    });
 
     return (
         <PaperProvider>
             <View style={styles.container}>
-                <Text>{'You have sucessfully logged in! \n Welcome back \n' + user.name}</Text>
+                <Text>{'You have sucessfully logged in! \n Welcome back \n' + userName}</Text>
                 <Button mode="contained" onPress={() => {
-                    console.log('test');
+                    console.log('test111');
                     auth()
                         .signOut()
                         .then(() => {
                             console.log('signOut');
-                            navigation.navigate('Login');
                         })
                         .catch((error) => {
                             alert(error);

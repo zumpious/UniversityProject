@@ -12,27 +12,10 @@ export function LoginScreen({navigation}) {
         navigation.navigate('Registration')
     }
 
+    //make it asynchron
     const onLoginPress = () => {
         auth()
             .signInWithEmailAndPassword(email, password)
-            .then((response) => {
-                const uid = response.user.uid
-                firestore()
-                    .collection('Users')
-                    .doc(uid)
-                    .get()
-                    .then(firestoreDocument => {
-                        if (!firestoreDocument.exists) {
-                            alert("User does not exist anymore.")
-                            return;
-                        }
-                        const data = firestoreDocument.data()
-                        navigation.navigate('Home', {user: data})
-                    })
-                    .catch(error => {
-                        alert(error)
-                    });
-            })
             .catch(error => {
                 alert(error)
             });

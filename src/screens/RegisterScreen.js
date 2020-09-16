@@ -15,6 +15,7 @@ export default function RegistrationScreen({navigation}) {
         navigation.navigate('Login')
     }
 
+    //make it async
     const onRegisterPress = () => {
         if (password !== confirmPassword) {
             alert("Passwords don't match.")
@@ -33,9 +34,6 @@ export default function RegistrationScreen({navigation}) {
                     .collection('Users')
                         .doc(uid)
                         .set(data)
-                    .then(() => {
-                        navigation.navigate('Home', {user: data});
-                    })
                     .catch((error) => {
                         alert(error)
                     });
