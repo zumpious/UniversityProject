@@ -62,10 +62,10 @@ export function App() {
 
     return (
         <NavigationContainer>
-            <Stack.Navigator>
+            <Stack.Navigator screenOptions={{gestureEnabled: true}}>
                 { user ? (
                     <Stack.Screen name="Home">
-                        {props => <HomeScreen {...props} extraData={user} />}
+                        {props => <HomeScreen {...props} userData={user} />}
                     </Stack.Screen>
                 ) : (
                     <>
