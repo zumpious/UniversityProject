@@ -1,6 +1,6 @@
 import React, { useState, useEffect, createContext } from 'react';
 import auth from '@react-native-firebase/auth';
-import SignInStack from "./SignInStack";
+import SignInTab from "./SignInTab";
 import SignOutStack from "./SignOutStack";
 import LoadingScreen from "../screens/animations/LoadingScreen";
 
@@ -31,7 +31,7 @@ export default function AuthNavigator() {
 
     return user ? (
         <AuthContext.Provider value={user}>
-            <SignInStack />
+            <SignInTab />
         </AuthContext.Provider>
     ) : (
         <SignOutStack />

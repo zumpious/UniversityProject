@@ -4,7 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-export function DetailScreen({ navigation }) {
+export function CreatePostScreen({ navigation }) {
     return (
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
             <Text>Post screen</Text>
@@ -17,4 +17,4 @@ export function DetailScreen({ navigation }) {
     );
 }
 
-export default  DetailScreen;
+export default  CreatePostScreen;

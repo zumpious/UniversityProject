@@ -51,7 +51,11 @@ export function HomeScreen({ navigation }) {
         <PaperProvider>
             <View style={styles.container}>
                 <Text>{'You have sucessfully logged in! \n Welcome back \n' + userName}</Text>
-                <Button mode="contained" onPress={() => {
+                <Button
+                    mode="contained"
+                    color="#788eec"
+                    labelStyle={{color: "white"}}
+                    onPress={() => {
                     auth()
                         .signOut()
                         .then(() => {
@@ -64,9 +68,11 @@ export function HomeScreen({ navigation }) {
                 </Button>
                 <Button
                     mode="contained"
-                    onPress={() => navigation.navigate('Details')}
+                    onPress={() => navigation.navigate('Profil')}
+                    color="#788eec"
+                    labelStyle={{color: "white"}}
                 >
-                    Details
+                    Profil
                 </Button>
             </View>
         </PaperProvider>
