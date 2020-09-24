@@ -34,7 +34,7 @@ export function HomeScreen(props) {
                                 setUserName(data.name);
                                 setLoading(false)
                             })
-                    },3000)
+                    },2500)
                     return;
                 }
                 const data = firestoreDocument.data()
