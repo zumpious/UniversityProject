@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import {Image, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native'
+import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
