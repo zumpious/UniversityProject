@@ -7,7 +7,7 @@ import { AuthContext } from "../navigation/AuthNavigator";
 import firestore from "@react-native-firebase/firestore";
 import LoadingScreen from "./animations/LoadingScreen";
 
-export function HomeScreen(props) {
+export function HomeScreen({ navigation }) {
     const [loading, setLoading] = useState(false)
     const [userName, setUserName] = useState('')
 
@@ -61,6 +61,12 @@ export function HomeScreen(props) {
                         });
                 }}>
                     Log Out
+                </Button>
+                <Button
+                    mode="contained"
+                    onPress={() => navigation.navigate('Details')}
+                >
+                    Details
                 </Button>
             </View>
         </PaperProvider>
