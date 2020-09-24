@@ -3,12 +3,12 @@ import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import auth from '@react-native-firebase/auth';
 import { View, Text, StyleSheet } from 'react-native';
 import { Button } from "react-native-paper";
-//import { useNavigation } from '@react-navigation/native'
 import { AuthContext } from "../navigation/AuthNavigator";
 import firestore from "@react-native-firebase/firestore";
-import {get} from "react-native/Libraries/TurboModule/TurboModuleRegistry";
+import LoadingScreen from "./LoadingScreen";
 
 export function HomeScreen(props) {
+    const [loading, setLoading] = useState(false)
     const [userName, setUserName] = useState('')
 
     const user = useContext(AuthContext);
@@ -20,8 +20,21 @@ export function HomeScreen(props) {
             .doc(uid)
             .get()
             .then(firestoreDocument => {
+                // TODO remove setTimeout()
+                // This was only added because after registration the firestore document might not be created yet and therefor can't be fetched immediately
                 if (!firestoreDocument.exists) {
-                    alert("User does not exist anymore.")
+                    setLoading(true);
+                    setTimeout(() => {
+                        firestore()
+                            .collection('Users')
+                            .doc(uid)
+                            .get()
+                            .then(firestoreDocument => {
+                                const data = firestoreDocument.data()
+                                setUserName(data.name);
+                                setLoading(false)
+                            })
+                    },3000)
                     return;
                 }
                 const data = firestoreDocument.data()
@@ -32,16 +45,16 @@ export function HomeScreen(props) {
             });
     });
 
-    return (
+    return loading ? (
+        <LoadingScreen />
+    ) : (
         <PaperProvider>
             <View style={styles.container}>
                 <Text>{'You have sucessfully logged in! \n Welcome back \n' + userName}</Text>
                 <Button mode="contained" onPress={() => {
-                    console.log('test111');
                     auth()
                         .signOut()
                         .then(() => {
-                            console.log('signOut');
                         })
                         .catch((error) => {
                             alert(error);

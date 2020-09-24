@@ -1,11 +1,10 @@
 import React from 'react';
-import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, ActivityIndicator } from 'react-native';
 
 export function LoadingScreen() {
     return (
-        <View style={styles.container}>
-            <Text>Loading...</Text>
-            <ActivityIndicator size="large"></ActivityIndicator>
+        <View style={[styles.container, styles.horizontal]}>
+            <ActivityIndicator size="large" />
         </View>
     );
 }
@@ -13,8 +12,12 @@ export function LoadingScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: "center",
-        alignItems: "center"
+        justifyContent: "center"
+    },
+    horizontal: {
+        flexDirection: "row",
+        justifyContent: "space-around",
+        padding: 10
     }
 });
 
