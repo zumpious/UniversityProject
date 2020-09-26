@@ -1,5 +1,5 @@
 import React, {useContext, useState} from 'react';
-import {Text, View, PermissionsAndroid, StyleSheet, TextInput} from 'react-native';
+import {Text, View, PermissionsAndroid, StyleSheet, TextInput, TouchableOpacity} from 'react-native';
 import {Button, Provider as PaperProvider, Title} from "react-native-paper";
 import Geolocation from 'react-native-geolocation-service';
 import {AuthContext} from "../navigation/AuthNavigator";
@@ -44,6 +44,7 @@ export function CreatePostScreen({ navigation }) {
                     },
                     { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
                 );
+                console.log(position);
             } else {
                 console.log("Location permission denied");
             }
@@ -53,6 +54,7 @@ export function CreatePostScreen({ navigation }) {
     };
 
     //ToDo think about a way that allows the user to easy delete the value of an input area (e.g. delete button inside the textInput)
+    //ToDo rework styling and design of the buttons
     return (
         <View style={styles.container}>
             <KeyboardAwareScrollView
@@ -83,17 +85,25 @@ export function CreatePostScreen({ navigation }) {
                     numberOfLines = {5}
                 />
 
-                <View style={{flex: 1, alignItems: 'center'}}>
-                    <Button
-                        mode="contained"
-                        color="#788eec"
-                        labelStyle={{color: "white"}}
-                        onPress={getLocationPermissionAndCoordinates}>
-                        Add Location
-                    </Button>
-                    <Text>{position.latitude}</Text>
-                    <Text>{position.longitude}</Text>
-                </View>
+                <Title style={{marginLeft: 30}}>Add Location</Title>
+                <TouchableOpacity
+                    style={styles.buttonSmall}
+                    onPress={getLocationPermissionAndCoordinates}>
+                    <Text style={styles.buttonTitle}>Add Location  </Text>
+                </TouchableOpacity>
+
+                <Title style={{marginLeft: 30}}>Add Photo</Title>
+                <TouchableOpacity
+                    style={styles.buttonSmall}
+                    onPress={() => {console.log('Photo Button')}}>
+                    <Text style={styles.buttonTitle}>Add Photo  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                    style={[styles.buttonTall, styles.submitPost]}
+                    onPress={() => console.log('Submit')}>
+                    <Text style={styles.buttonTitle}>Submit Post  </Text>
+                </TouchableOpacity>
 
             </KeyboardAwareScrollView>
         </View>
@@ -125,7 +135,41 @@ const styles = StyleSheet.create({
     },
     description: {
         height: 96,
-        marginTop: 10
+        marginTop: 10,
+        marginBottom: 30
+    },
+    buttonSmall: {
+        backgroundColor: '#ebbc86',
+        marginTop: 10,
+        marginBottom: 30,
+        marginLeft: 30,
+        height: 42,
+        borderRadius: 5,
+        alignItems: "center",
+        justifyContent: 'center',
+        width: '40%'
+    },
+    buttonTall: {
+        backgroundColor: '#788eec',
+        marginLeft: 30,
+        marginRight: 30,
+        marginTop: 20,
+        height: 52,
+        borderRadius: 5,
+        alignItems: "center",
+        justifyContent: 'center',
+        width: '100%'
+    },
+    buttonTitle: {
+        color: 'white',
+        fontSize: 16,
+        fontWeight: "bold"
+    },
+    submitPost: {
+        width: '85%',
+        justifyContent: 'center',
+        alignItems: "center",
+        marginTop: 50
     }
 });
 
