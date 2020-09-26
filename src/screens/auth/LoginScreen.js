@@ -11,10 +11,10 @@ export function LoginScreen({navigation}) {
         navigation.navigate('Registration')
     }
 
-    //ToDo update error handling
     const onLoginPress = () => {
         auth()
             .signInWithEmailAndPassword(email, password)
+            //ToDo implement error handling
             .catch(error => {
                 alert(error)
             });

@@ -39,6 +39,7 @@ export function HomeScreen({ navigation }) {
                 const data = firestoreDocument.data()
                 setUserName(data.name);
             })
+            //ToDo implement error handling
             .catch(error => {
                 alert(error)
             });

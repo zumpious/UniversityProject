@@ -37,6 +37,7 @@ export default function RegistrationScreen({navigation}) {
                         alert(error)
                     });
             })
+            //ToDo implement error handling
             .catch((error) => {
                 alert(error)
             });
