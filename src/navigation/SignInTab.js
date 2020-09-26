@@ -24,8 +24,8 @@ export default function SignInTab() {
                                 : 'home-outline';
                         } else if (route.name === 'Post') {
                             iconName = focused
-                                ? 'add'
-                                : 'add-outline';
+                                ? 'create'
+                                : 'create-outline';
                         } else if (route.name === 'Profil') {
                             iconName = focused
                                 ? 'person'
