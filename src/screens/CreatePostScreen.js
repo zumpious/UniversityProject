@@ -55,6 +55,7 @@ export function CreatePostScreen({ navigation }) {
 
     //ToDo think about a way that allows the user to easy delete the value of an input area (e.g. delete button inside the textInput)
     //ToDo rework styling and design of the buttons
+    //ToDo display the used location data after fetching it next to its button
     return (
         <View style={styles.container}>
             <KeyboardAwareScrollView
