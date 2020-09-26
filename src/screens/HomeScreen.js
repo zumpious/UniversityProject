@@ -1,6 +1,5 @@
 import React, {useContext, useState, useEffect} from 'react';
 import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
-import auth from '@react-native-firebase/auth';
 import { View, Text, StyleSheet } from 'react-native';
 import { Button } from "react-native-paper";
 import { AuthContext } from "../navigation/AuthNavigator";
@@ -51,21 +50,6 @@ export function HomeScreen({ navigation }) {
         <PaperProvider>
             <View style={styles.container}>
                 <Text>{'You have sucessfully logged in! \n Welcome back \n' + userName}</Text>
-                <Button
-                    mode="contained"
-                    color="#788eec"
-                    labelStyle={{color: "white"}}
-                    onPress={() => {
-                    auth()
-                        .signOut()
-                        .then(() => {
-                        })
-                        .catch((error) => {
-                            alert(error);
-                        });
-                }}>
-                    Log Out
-                </Button>
                 <Button
                     mode="contained"
                     onPress={() => navigation.navigate('Profil')}
