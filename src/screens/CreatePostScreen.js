@@ -10,7 +10,7 @@ export function CreatePostScreen({ navigation }) {
         timestamp: null
     });
 
-    //ToDo Upgrade getLocation()-function and enable passing location via some map API (e.g. Google Maps)
+    //ToDo Upgrade this function and enable passing location via some map API (e.g. Google Maps)
     //ToDo implement error handling
     const getLocationPermissionAndCoordinates = async () => {
         try {
@@ -62,7 +62,6 @@ export function CreatePostScreen({ navigation }) {
                 <Text>{position.longitude}</Text>
             </View>
         </PaperProvider>
-
     );
 }
 
