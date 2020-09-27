@@ -3,7 +3,7 @@ import {Text, View, PermissionsAndroid, StyleSheet, TextInput, TouchableOpacity}
 import {Button, Provider as PaperProvider, Title} from "react-native-paper";
 import Geolocation from 'react-native-geolocation-service';
 import {AuthContext} from "../navigation/AuthNavigator";
-import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 export function CreatePostScreen({ navigation }) {
     const [title, setTitle] = useState('');
@@ -30,6 +30,8 @@ export function CreatePostScreen({ navigation }) {
                 }
             );
             if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                //ToDo double check that latitude and longitude are not null
+                //ToDo tell the user to try again if coords null
                 Geolocation.getCurrentPosition(
                     (position) => {
                         setPosition((prevState => ({
