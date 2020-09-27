@@ -1,11 +1,25 @@
 import React, {useContext, useState} from 'react';
-import {Text, View, PermissionsAndroid, StyleSheet, TextInput, TouchableOpacity} from 'react-native';
+import {Text,
+        View,
+        PermissionsAndroid,
+        StyleSheet,
+        TextInput,
+        TouchableOpacity,
+        Image,
+        Alert,
+        SafeAreaView } from 'react-native';
 import {Button, Provider as PaperProvider, Title} from "react-native-paper";
 import Geolocation from 'react-native-geolocation-service';
-import {AuthContext} from "../navigation/AuthNavigator";
+import ImagePicker from 'react-native-image-picker';
+import {AuthContext} from '../navigation/AuthNavigator';
+import storage from '@react-native-firebase/storage';
+import * as Progress from 'react-native-progress';
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
+
+//ToDo split component into smaller pieces
 export function CreatePostScreen({ navigation }) {
+    //Firestore Post relative data
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [position, setPosition] = useState({
@@ -13,6 +27,11 @@ export function CreatePostScreen({ navigation }) {
         longitude: null,
         timestamp: null
     });
+
+    //Get and Upload image data
+    const [image, setImage] = useState(null);
+    const [uploading, setUploading] = useState(false);
+    const [transferred, setTransferred] = useState(0);
 
     //ToDo Upgrade this function and enable passing location via some map API (e.g. Google Maps)
     //ToDo implement error handling
@@ -55,6 +74,73 @@ export function CreatePostScreen({ navigation }) {
         }
     };
 
+
+
+    const selectImage = () => {
+        const options = {
+            maxWidth: 2000,
+            maxHeight: 2000,
+            storageOptions: {
+                skipBackup: true,
+                path: 'images'
+            }
+        };
+        ImagePicker.showImagePicker(options, response => {
+            console.log('Response = ', response);
+            if (response.didCancel) {
+                console.log('User cancelled image picker');
+            } else if (response.error) {
+                console.log('ImagePicker Error: ', response.error);
+            } else if (response.customButton) {
+                console.log('User tapped custom button: ', response.customButton);
+            } else {
+                const source = {uri: response.uri};
+                console.log(source);
+                setImage(source);
+            }
+        });
+    };
+
+    const uploadImage = async () => {
+        if (image !== null){
+            const {uri} = image;
+            const filename = uri.substring(uri.lastIndexOf('/') + 1);
+            console.log(filename);
+            const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
+
+            setUploading(true);
+            setTransferred(0);
+
+            //upload Image
+            const task = storage()
+                .ref(filename)
+                .putFile(uploadUri);
+
+            // set progress state
+            task.on('state_changed', snapshot => {
+                setTransferred(
+                    Math.round(snapshot.bytesTransferred / snapshot.totalBytes) * 10000
+                );
+            });
+
+            try {
+                await task;
+            } catch (e) {
+                console.error(e);
+            }
+            setUploading(false);
+            Alert.alert(
+                'Photo uploaded!',
+                'Your photo has been uploaded to Firebase Cloud Storage!'
+            );
+            setImage(null);
+        }
+        else {
+            console.log('no Image selected')
+        }
+    };
+
+
     //ToDo think about a way that allows the user to easy delete the value of an input area (e.g. delete button inside the textInput)
     //ToDo rework styling and design of the buttons
     //ToDo display the used location data after fetching it next to its button
@@ -95,12 +181,34 @@ export function CreatePostScreen({ navigation }) {
                     <Text style={styles.buttonTitle}>Add Location  </Text>
                 </TouchableOpacity>
 
+
                 <Title style={{marginLeft: 30}}>Add Photo</Title>
-                <TouchableOpacity
-                    style={styles.buttonSmall}
-                    onPress={() => {console.log('Photo Button')}}>
-                    <Text style={styles.buttonTitle}>Add Photo  </Text>
-                </TouchableOpacity>
+                <SafeAreaView>
+
+                    <TouchableOpacity style={styles.buttonSmall} onPress={selectImage}>
+                        {image === null ?
+                            <Text style={styles.buttonTitle}>Pick an image  </Text> :
+                            <Text style={styles.buttonTitle}>Change image  </Text>
+                        }
+                    </TouchableOpacity>
+
+                    <View style={styles.imageContainer}>
+                        {image !== null ?
+                            (<Image source={{ uri: image.uri }} style={styles.imageBox} />) :
+                            null
+                        }
+                        {uploading ?
+                            (<View style={styles.progressBarContainer}>
+                                <Progress.Bar progress={transferred} width={300} />
+                            </View>) :
+                            (<TouchableOpacity style={styles.buttonSmall} onPress={uploadImage}>
+                                <Text style={styles.buttonTitle}>Upload image  </Text>
+                            </TouchableOpacity>)
+                        }
+                    </View>
+                </SafeAreaView>
+
+
 
                 <TouchableOpacity
                     style={[styles.buttonTall, styles.submitPost]}
@@ -156,7 +264,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#788eec',
         marginLeft: 30,
         marginRight: 30,
-        marginTop: 20,
+        marginBottom: 40,
         height: 52,
         borderRadius: 5,
         alignItems: "center",
@@ -168,11 +276,24 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: "bold"
     },
+    imageContainer: {
+        marginTop: 30,
+        marginBottom: 50
+    },
+    imageBox: {
+        marginLeft: 30,
+        width: 300,
+        height: 300
+    },
+    progressBarContainer: {
+        marginTop: 20,
+        marginLeft: 30
+    },
     submitPost: {
-        width: '85%',
-        justifyContent: 'center',
-        alignItems: "center",
-        marginTop: 50
+    width: '85%',
+    justifyContent: 'center',
+    alignItems: "center",
+    marginTop: 50
     }
 });
 
