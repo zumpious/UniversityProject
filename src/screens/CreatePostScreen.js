@@ -20,7 +20,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 //ToDo split component into smaller pieces
 //ToDo remove console.logs and implement advanced error handling to every function
 export function CreatePostScreen({ navigation }) {
-    //Firestore Post relative data
+    //Firestore Dokument relative data
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [position, setPosition] = useState({
@@ -73,8 +73,6 @@ export function CreatePostScreen({ navigation }) {
             console.warn(err);
         }
     };
-
-
 
     const selectImage = () => {
         const options = {
@@ -140,6 +138,10 @@ export function CreatePostScreen({ navigation }) {
         }
     };
 
+    //creating a firestore document of the created post
+    const submitPost = () => {
+
+    }
 
     //ToDo think about a way that allows the user to easy delete the value of an input area (e.g. delete button inside the textInput)
     //ToDo rework styling and design of the buttons
@@ -212,7 +214,7 @@ export function CreatePostScreen({ navigation }) {
 
                 <TouchableOpacity
                     style={[styles.buttonTall, styles.submitPost]}
-                    onPress={() => console.log('Submit')}>
+                    onPress={submitPost}>
                     <Text style={styles.buttonTitle}>Submit Post  </Text>
                 </TouchableOpacity>
 
