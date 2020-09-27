@@ -34,6 +34,7 @@ export function CreatePostScreen({ navigation }) {
     const [uploading, setUploading] = useState(false);
     const [transferred, setTransferred] = useState(0);
 
+    //ToDo why does the user has to fetch the location multiple times before it works? --> Fix BUG
     //ToDo Upgrade this function and enable passing location via some map API (e.g. Google Maps)
     const getLocationPermissionAndCoordinates = async () => {
         try {
@@ -63,7 +64,7 @@ export function CreatePostScreen({ navigation }) {
                         // See error code charts below.
                         console.log(error.code, error.message);
                     },
-                    { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+                    { enableHighAccuracy: true, timeout: 5000, maximumAge: 10000 }
                 );
                 console.log(position);
             } else {
@@ -186,31 +187,27 @@ export function CreatePostScreen({ navigation }) {
 
                 <Title style={{marginLeft: 30}}>Add Photo</Title>
                 <SafeAreaView>
-
                     <TouchableOpacity style={styles.buttonSmall} onPress={selectImage}>
                         {image === null ?
-                            <Text style={styles.buttonTitle}>Pick an image  </Text> :
-                            <Text style={styles.buttonTitle}>Change image  </Text>
+                            (<Text style={styles.buttonTitle}>Pick an image  </Text>) :
+                            (<Text style={styles.buttonTitle}>Change image  </Text>)
                         }
                     </TouchableOpacity>
-
                     <View style={styles.imageContainer}>
                         {image !== null ?
                             (<Image source={{ uri: image.uri }} style={styles.imageBox} />) :
                             null
                         }
-                        {uploading ?
+                        {/*uploading ?
                             (<View style={styles.progressBarContainer}>
                                 <Progress.Bar progress={transferred} width={300} />
                             </View>) :
                             (<TouchableOpacity style={styles.buttonSmall} onPress={uploadImage}>
                                 <Text style={styles.buttonTitle}>Upload image  </Text>
                             </TouchableOpacity>)
-                        }
+                        */}
                     </View>
                 </SafeAreaView>
-
-
 
                 <TouchableOpacity
                     style={[styles.buttonTall, styles.submitPost]}
@@ -277,10 +274,6 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 16,
         fontWeight: "bold"
-    },
-    imageContainer: {
-        marginTop: 30,
-        marginBottom: 50
     },
     imageBox: {
         marginLeft: 30,
