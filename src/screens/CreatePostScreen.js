@@ -18,6 +18,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 
 
 //ToDo split component into smaller pieces
+//ToDo remove console.logs and implement advanced error handling to every function
 export function CreatePostScreen({ navigation }) {
     //Firestore Post relative data
     const [title, setTitle] = useState('');
@@ -34,7 +35,6 @@ export function CreatePostScreen({ navigation }) {
     const [transferred, setTransferred] = useState(0);
 
     //ToDo Upgrade this function and enable passing location via some map API (e.g. Google Maps)
-    //ToDo implement error handling
     const getLocationPermissionAndCoordinates = async () => {
         try {
             const granted = await PermissionsAndroid.request(
@@ -143,7 +143,7 @@ export function CreatePostScreen({ navigation }) {
 
     //ToDo think about a way that allows the user to easy delete the value of an input area (e.g. delete button inside the textInput)
     //ToDo rework styling and design of the buttons
-    //ToDo display the used location data after fetching it next to its button
+    //ToDo display the used location data after fetching it, e.g. next to its button or remove the location button and fetch coords on post submit
     return (
         <View style={styles.container}>
             <KeyboardAwareScrollView

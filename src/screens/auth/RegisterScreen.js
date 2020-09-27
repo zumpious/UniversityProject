@@ -27,7 +27,8 @@ export default function RegistrationScreen({navigation}) {
                 const data = {
                     id: uid,
                     email: email,
-                    name: fullName
+                    name: fullName,
+                    posts: null
                 };
                 firestore()
                     .collection('Users')
