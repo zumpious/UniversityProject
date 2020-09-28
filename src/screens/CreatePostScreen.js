@@ -36,7 +36,7 @@ export function CreatePostScreen({ navigation }) {
     const [uploading, setUploading] = useState(false);
     //const [transferred, setTransferred] = useState(0);
 
-    //Create firestore Reference
+    //Create firestore References
     const postRef = firestore().collection('Posts');
     const user = useContext(AuthContext);
     const uid = user.uid;
@@ -85,7 +85,7 @@ export function CreatePostScreen({ navigation }) {
     };
 
 
-    //ToDo resize image after selection
+    //ToDo Add resize functionality after Image selection
     const selectImage = () => {
         const options = {
             maxWidth: 2000,
@@ -181,6 +181,7 @@ export function CreatePostScreen({ navigation }) {
                         postID: postID,
                         image: filename
                     })
+                    //Add postID reference to User
                     .then(() => {
                         firestore()
                             .collection('Users')
@@ -221,6 +222,7 @@ export function CreatePostScreen({ navigation }) {
                     postID: postID,
                     image: null
                 })
+                //Add postID reference to User
                 .then(() => {
                     firestore()
                         .collection('Users')
@@ -231,7 +233,6 @@ export function CreatePostScreen({ navigation }) {
                         .then(() => {
                             console.log('postID added to Users document')
                         });
-                    console.log('Post Added');
                     setTitle('');
                     setDescription('');
                     setPosition((prevState => ({
