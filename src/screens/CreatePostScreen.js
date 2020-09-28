@@ -20,7 +20,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 //ToDo split component into smaller pieces
 //ToDo remove console.logs and implement advanced error handling to every function
 export function CreatePostScreen({ navigation }) {
-    //Firestore Dokument relative data
+    //Firestore document relative data
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [position, setPosition] = useState({
@@ -29,7 +29,7 @@ export function CreatePostScreen({ navigation }) {
         timestamp: null
     });
 
-    //Get and Upload image data
+    //Get and upload image data
     const [image, setImage] = useState(null);
     const [uploading, setUploading] = useState(false);
     const [transferred, setTransferred] = useState(0);
