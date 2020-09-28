@@ -18,7 +18,6 @@ import firestore from '@react-native-firebase/firestore';
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import LoadingScreen from "./animations/LoadingScreen";
 
-
 //ToDo split component into smaller pieces
 //ToDo remove console.logs and implement advanced error handling to every function
 export function CreatePostScreen({ navigation }) {
@@ -37,11 +36,9 @@ export function CreatePostScreen({ navigation }) {
     //const [transferred, setTransferred] = useState(0);
 
     //Create firestore References
-    const postRef = firestore().collection('Posts');
+    const postRef = firestore().collection('Users');
     const user = useContext(AuthContext);
     const uid = user.uid;
-
-
 
 
     //ToDo it does take some time for the geolocation service to fetch to current location, consequently if the user posts before the location service returned to location the data send to firestore is empty
@@ -84,7 +81,6 @@ export function CreatePostScreen({ navigation }) {
         }
     };
 
-
     //ToDo Add resize functionality after Image selection
     const selectImage = () => {
         const options = {
@@ -110,44 +106,6 @@ export function CreatePostScreen({ navigation }) {
         });
     };
 
-    /*
-    async function uploadImage()  {
-            const {uri} = image;
-            const filename = uri.substring(uri.lastIndexOf('/') + 1);
-            const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
-
-            setUploading(true);
-            setTransferred(0);
-
-            //upload Image
-            const task = storage()
-                .ref(filename)
-                .putFile(uploadUri);
-
-
-        // set progress state
-        task.on('state_changed', snapshot => {
-            setTransferred(
-                Math.round(snapshot.bytesTransferred / snapshot.totalBytes) * 10000
-            );
-        });
-
-            try {
-                await task;
-            } catch (e) {
-                console.error(e);
-            }
-            setUploading(false);
-            setImageFilename(filename);
-            Alert.alert(
-                'Photo uploaded!',
-                'Your photo has been uploaded to Firebase Cloud Storage!'
-            );
-            setImage(null);
-        }
-*/
-
-    //creating a firestore document of the created post
     //ToDo check that data properties are not null
     const submitPost = async () => {
         const postID = createUUIDv4();
@@ -158,7 +116,6 @@ export function CreatePostScreen({ navigation }) {
         const {uri} = image;
         const filename = uri.substring(uri.lastIndexOf('/') + 1);
         const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
-
         setUploading(true);
 
         //upload Image
@@ -166,51 +123,8 @@ export function CreatePostScreen({ navigation }) {
             .ref(filename)
             .putFile(uploadUri)
             .then(() => {
-                //Post data to firestore document
-                postRef
-                    .doc(postID)
-                    .set({
-                        title: title,
-                        description: description,
-                        location: {
-                            timestamp: position.timestamp,
-                            longitude: position.longitude,
-                            latitude: position.latitude
-                        },
-                        userID: uid,
-                        postID: postID,
-                        image: filename
-                    })
-                    //Add postID reference to User
-                    .then(() => {
-                        firestore()
-                            .collection('Users')
-                            .doc(uid)
-                            .update({
-                                posts: firestore.FieldValue.arrayUnion(postID),
-                            })
-                            .then(() => {
-                                console.log('postID added to Users document')
-                            });
-
-                        //clear document after posting to firestore
-                        setTitle('');
-                        setDescription('');
-                        setPosition((prevState => ({
-                            latitude: null,
-                            longitude: null,
-                            timestamp: null
-                        })));
-                        setImage(null);
-                        setUploading(false)
-                    });
-            });
-        } else {
-            //Post data without Image
-            //Post data to firestore document
-            postRef
-                .doc(postID)
-                .set({
+                //Create data object
+                let post = {
                     title: title,
                     description: description,
                     location: {
@@ -218,21 +132,18 @@ export function CreatePostScreen({ navigation }) {
                         longitude: position.longitude,
                         latitude: position.latitude
                     },
-                    userID: uid,
                     postID: postID,
-                    image: null
-                })
-                //Add postID reference to User
-                .then(() => {
-                    firestore()
-                        .collection('Users')
-                        .doc(uid)
-                        .update({
-                            posts: firestore.FieldValue.arrayUnion(postID),
-                        })
-                        .then(() => {
-                            console.log('postID added to Users document')
-                        });
+                    image: filename
+                };
+                //post data object to firestore document of user
+                postRef
+                    .doc(uid)
+                    .update({
+                        posts: firestore.FieldValue.arrayUnion(post),
+                    })
+                    .then(() => {
+                        console.log('post added to Users document')
+                    });
                     setTitle('');
                     setDescription('');
                     setPosition((prevState => ({
@@ -240,8 +151,42 @@ export function CreatePostScreen({ navigation }) {
                         longitude: null,
                         timestamp: null
                     })));
+                    setImage(null);
+                    setUploading(false);
+            });
+        } else {
+            //Post data without Image
+
+            //Create data object
+            let post = {
+                title: title,
+                description: description,
+                location: {
+                timestamp: position.timestamp,
+                    longitude: position.longitude,
+                    latitude: position.latitude
+            },
+                postID: postID,
+                image: null
+            };
+            //post data object to firestore document of its user
+            postRef
+                .doc(uid)
+                .update({
+                    posts: firestore.FieldValue.arrayUnion(post),
+                })
+                .then(() => {
+                    console.log('post added to Users document')
                 });
-        }
+                setTitle('');
+                setDescription('');
+                setPosition((prevState => ({
+                    latitude: null,
+                    longitude: null,
+                    timestamp: null
+                })));
+            }
+
     }
 
     //ToDo think about a way that allows the user to easy delete the value of an input area (e.g. delete button inside the textInput)
@@ -302,16 +247,6 @@ export function CreatePostScreen({ navigation }) {
                             (<Image source={{ uri: image.uri }} style={styles.imageBox} />) :
                             null
                         }
-                         {/*uploading ?
-                            (<View style={styles.progressBarContainer}>
-                                <Progress.Bar progress={transferred} width={300} />
-                            </View>)  :
-
-                             (<TouchableOpacity style={styles.buttonSmall} onPress={uploadImage}>
-                                 <Text style={styles.buttonTitle}>Upload image  </Text>
-                             </TouchableOpacity>)
-                             null
-                       */}
                     </View>
                 </SafeAreaView>
 
