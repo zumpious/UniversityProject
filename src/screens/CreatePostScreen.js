@@ -34,9 +34,8 @@ export function CreatePostScreen({ navigation }) {
 
     //Get and upload image data
     const [image, setImage] = useState(null);
-    const [imageFilename, setImageFilename] = useState('');
     const [uploading, setUploading] = useState(false);
-    const [transferred, setTransferred] = useState(0);
+    //const [transferred, setTransferred] = useState(0);
 
     //Create firestore Reference
     const postRef = firestore().collection('Posts');
@@ -160,7 +159,6 @@ export function CreatePostScreen({ navigation }) {
         const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
 
         setUploading(true);
-        //setTransferred(0);
 
         //upload Image
         storage()
@@ -192,7 +190,8 @@ export function CreatePostScreen({ navigation }) {
                             .then(() => {
                                 console.log('postID added to Users document')
                             });
-                        console.log('Post Added');
+
+                        //clear document after posting to firestore
                         setTitle('');
                         setDescription('');
                         setPosition((prevState => ({
@@ -200,7 +199,6 @@ export function CreatePostScreen({ navigation }) {
                             longitude: null,
                             timestamp: null
                         })));
-                        //setImageFilename('');
                         setImage(null);
                         setUploading(false)
                     });
@@ -248,7 +246,7 @@ export function CreatePostScreen({ navigation }) {
     //ToDo rework styling and design of the buttons
     //ToDo display the used location data after fetching it, e.g. next to its button or remove the location button and fetch coords on post submit
     return ( uploading ? (
-            <LoadingScreen />
+        <LoadingScreen uploading={true} />
         ) : (
         <View style={styles.container}>
             <KeyboardAwareScrollView
