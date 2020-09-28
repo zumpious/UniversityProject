@@ -6,7 +6,6 @@ import {Text,
         TextInput,
         TouchableOpacity,
         Image,
-        Alert,
         SafeAreaView } from 'react-native';
 import {Title} from "react-native-paper";
 import Geolocation from 'react-native-geolocation-service';
@@ -42,7 +41,7 @@ export function CreatePostScreen({ navigation }) {
 
 
     //ToDo it does take some time for the geolocation service to fetch to current location, consequently if the user posts before the location service returned to location the data send to firestore is empty
-    //ToDo Upgrade this function and enable passing location via some map API (e.g. Google Maps)
+    //ToDo Upgrade this function and enable passing location via some map API (e.g. Google Maps), but currently picked this solution because Google Maps API is not free to use
     const getLocationPermissionAndCoordinates = async () => {
         try {
             const granted = await PermissionsAndroid.request(
@@ -226,10 +225,9 @@ export function CreatePostScreen({ navigation }) {
                 <TouchableOpacity
                     style={styles.buttonSmall}
                     onPress={getLocationPermissionAndCoordinates}>
+
                     <Text style={styles.buttonTitle}>Add Location  </Text>
                 </TouchableOpacity>
-
-
 
                 <Title style={{marginLeft: 30}}>Add Photo</Title>
                 <SafeAreaView>
