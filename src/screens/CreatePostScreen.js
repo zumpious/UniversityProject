@@ -8,14 +8,13 @@ import {Text,
         Image,
         Alert,
         SafeAreaView } from 'react-native';
-import {Button, Provider as PaperProvider, Title} from "react-native-paper";
+import {Title} from "react-native-paper";
 import Geolocation from 'react-native-geolocation-service';
 import ImagePicker from 'react-native-image-picker';
 import { createUUIDv4 } from "../helpers/helpers";
 import {AuthContext} from '../navigation/AuthNavigator';
 import storage from '@react-native-firebase/storage';
 import firestore from '@react-native-firebase/firestore';
-import * as Progress from 'react-native-progress';
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import LoadingScreen from "./animations/LoadingScreen";
 
@@ -45,7 +44,7 @@ export function CreatePostScreen({ navigation }) {
 
 
 
-    //ToDo why does the user has to fetch the location multiple times before it works? --> Fix BUG
+    //ToDo it does take some time for the geolocation service to fetch to current location, consequently if the user posts before the location service returned to location the data send to firestore is empty
     //ToDo Upgrade this function and enable passing location via some map API (e.g. Google Maps)
     const getLocationPermissionAndCoordinates = async () => {
         try {
