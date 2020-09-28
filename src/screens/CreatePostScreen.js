@@ -198,14 +198,14 @@ export function CreatePostScreen({ navigation }) {
                             (<Image source={{ uri: image.uri }} style={styles.imageBox} />) :
                             null
                         }
-                        {/*uploading ?
+                        {uploading ?
                             (<View style={styles.progressBarContainer}>
                                 <Progress.Bar progress={transferred} width={300} />
                             </View>) :
                             (<TouchableOpacity style={styles.buttonSmall} onPress={uploadImage}>
                                 <Text style={styles.buttonTitle}>Upload image  </Text>
                             </TouchableOpacity>)
-                        */}
+                        }
                     </View>
                 </SafeAreaView>
 
