@@ -112,7 +112,6 @@ export function CreatePostScreen({ navigation }) {
 
         //Post data with Image
         if (image !== null) {
-
         const {uri} = image;
         const filename = uri.substring(uri.lastIndexOf('/') + 1);
         const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
@@ -155,9 +154,7 @@ export function CreatePostScreen({ navigation }) {
                     setUploading(false);
             });
         } else {
-            //Post data without Image
-
-            //Create data object
+            //Create data object without Image
             let post = {
                 title: title,
                 description: description,
