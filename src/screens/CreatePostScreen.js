@@ -85,6 +85,8 @@ export function CreatePostScreen({ navigation }) {
         }
     };
 
+
+    //ToDo resize image after selection
     const selectImage = () => {
         const options = {
             maxWidth: 2000,
