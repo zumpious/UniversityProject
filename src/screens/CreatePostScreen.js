@@ -11,8 +11,10 @@ import {Text,
 import {Button, Provider as PaperProvider, Title} from "react-native-paper";
 import Geolocation from 'react-native-geolocation-service';
 import ImagePicker from 'react-native-image-picker';
+import { createUUIDv4 } from "../helpers/helpers";
 import {AuthContext} from '../navigation/AuthNavigator';
 import storage from '@react-native-firebase/storage';
+import firestore from '@react-native-firebase/firestore';
 import * as Progress from 'react-native-progress';
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
@@ -34,6 +36,14 @@ export function CreatePostScreen({ navigation }) {
     const [uploading, setUploading] = useState(false);
     const [transferred, setTransferred] = useState(0);
 
+    //Create firestore Reference
+    const postRef = firestore().collection('Posts');
+    const user = useContext(AuthContext);
+    const uid = user.uid;
+
+
+
+
     //ToDo why does the user has to fetch the location multiple times before it works? --> Fix BUG
     //ToDo Upgrade this function and enable passing location via some map API (e.g. Google Maps)
     const getLocationPermissionAndCoordinates = async () => {
@@ -54,6 +64,7 @@ export function CreatePostScreen({ navigation }) {
                 //ToDo tell the user to try again if coords null
                 Geolocation.getCurrentPosition(
                     (position) => {
+                        console.log(position);
                         setPosition((prevState => ({
                             latitude: position.coords.latitude,
                             longitude: position.coords.longitude,
@@ -66,7 +77,6 @@ export function CreatePostScreen({ navigation }) {
                     },
                     { enableHighAccuracy: true, timeout: 5000, maximumAge: 10000 }
                 );
-                console.log(position);
             } else {
                 console.log("Location permission denied");
             }
@@ -141,7 +151,33 @@ export function CreatePostScreen({ navigation }) {
 
     //creating a firestore document of the created post
     const submitPost = () => {
+        const postID = createUUIDv4();
 
+        //Post data to firestore document
+        postRef
+            .doc(postID)
+            .set({
+                title: title,
+                description: description,
+                location: {
+                    timestamp: position.timestamp,
+                    longitude: position.longitude,
+                    latitude: position.latitude
+                },
+                userID: uid,
+                postID: postID
+            })
+            .then(() => {
+
+                console.log('Post Added');
+                setTitle('');
+                setDescription('');
+                setPosition((prevState => ({
+                    latitude: null,
+                    longitude: null,
+                    timestamp: null
+                })))
+            });
     }
 
     //ToDo think about a way that allows the user to easy delete the value of an input area (e.g. delete button inside the textInput)
@@ -177,12 +213,14 @@ export function CreatePostScreen({ navigation }) {
                     numberOfLines = {5}
                 />
 
+
                 <Title style={{marginLeft: 30}}>Add Location</Title>
                 <TouchableOpacity
                     style={styles.buttonSmall}
                     onPress={getLocationPermissionAndCoordinates}>
                     <Text style={styles.buttonTitle}>Add Location  </Text>
                 </TouchableOpacity>
+
 
 
                 <Title style={{marginLeft: 30}}>Add Photo</Title>
@@ -198,14 +236,14 @@ export function CreatePostScreen({ navigation }) {
                             (<Image source={{ uri: image.uri }} style={styles.imageBox} />) :
                             null
                         }
-                        {uploading ?
+                        {/*uploading ?
                             (<View style={styles.progressBarContainer}>
                                 <Progress.Bar progress={transferred} width={300} />
                             </View>) :
                             (<TouchableOpacity style={styles.buttonSmall} onPress={uploadImage}>
                                 <Text style={styles.buttonTitle}>Upload image  </Text>
                             </TouchableOpacity>)
-                        }
+                        */}
                     </View>
                 </SafeAreaView>
 
