@@ -33,6 +33,7 @@ export function CreatePostScreen({ navigation }) {
 
     //Get and upload image data
     const [image, setImage] = useState(null);
+    const [imageFilename, setImageFilename] = useState('');
     const [uploading, setUploading] = useState(false);
     const [transferred, setTransferred] = useState(0);
 
@@ -64,7 +65,6 @@ export function CreatePostScreen({ navigation }) {
                 //ToDo tell the user to try again if coords null
                 Geolocation.getCurrentPosition(
                     (position) => {
-                        console.log(position);
                         setPosition((prevState => ({
                             latitude: position.coords.latitude,
                             longitude: position.coords.longitude,
@@ -104,17 +104,15 @@ export function CreatePostScreen({ navigation }) {
                 console.log('User tapped custom button: ', response.customButton);
             } else {
                 const source = {uri: response.uri};
-                console.log(source);
                 setImage(source);
             }
         });
     };
 
-    const uploadImage = async () => {
-        if (image !== null){
+    async function uploadImage()  {
             const {uri} = image;
-            const filename = uri.substring(uri.lastIndexOf('/') + 1);
-            console.log(filename);
+            setImageFilename(uri.substring(uri.lastIndexOf('/') + 1));
+            console.log('Image Filename : ' + imageFilename);
             const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
 
             setUploading(true);
@@ -122,15 +120,16 @@ export function CreatePostScreen({ navigation }) {
 
             //upload Image
             const task = storage()
-                .ref(filename)
+                .ref(imageFilename)
                 .putFile(uploadUri);
 
-            // set progress state
-            task.on('state_changed', snapshot => {
-                setTransferred(
-                    Math.round(snapshot.bytesTransferred / snapshot.totalBytes) * 10000
-                );
-            });
+
+        // set progress state
+        task.on('state_changed', snapshot => {
+            setTransferred(
+                Math.round(snapshot.bytesTransferred / snapshot.totalBytes) * 10000
+            );
+        });
 
             try {
                 await task;
@@ -144,12 +143,10 @@ export function CreatePostScreen({ navigation }) {
             );
             setImage(null);
         }
-        else {
-            console.log('no Image selected')
-        }
-    };
+
 
     //creating a firestore document of the created post
+    //ToDo check that data properties are not null
     const submitPost = () => {
         const postID = createUUIDv4();
 
@@ -165,10 +162,19 @@ export function CreatePostScreen({ navigation }) {
                     latitude: position.latitude
                 },
                 userID: uid,
-                postID: postID
+                postID: postID,
+                image: imageFilename
             })
             .then(() => {
-
+                firestore()
+                    .collection('Users')
+                    .doc(uid)
+                    .update({
+                        posts: postID,
+                    })
+                    .then(() => {
+                        console.log('postID added to Users document')
+                    });
                 console.log('Post Added');
                 setTitle('');
                 setDescription('');
@@ -176,7 +182,8 @@ export function CreatePostScreen({ navigation }) {
                     latitude: null,
                     longitude: null,
                     timestamp: null
-                })))
+                })));
+                setImageFilename('');
             });
     }
 
@@ -231,19 +238,19 @@ export function CreatePostScreen({ navigation }) {
                             (<Text style={styles.buttonTitle}>Change image  </Text>)
                         }
                     </TouchableOpacity>
-                    <View style={styles.imageContainer}>
+                    <View>
                         {image !== null ?
                             (<Image source={{ uri: image.uri }} style={styles.imageBox} />) :
                             null
                         }
-                        {/*uploading ?
+                        {uploading ?
                             (<View style={styles.progressBarContainer}>
                                 <Progress.Bar progress={transferred} width={300} />
-                            </View>) :
-                            (<TouchableOpacity style={styles.buttonSmall} onPress={uploadImage}>
-                                <Text style={styles.buttonTitle}>Upload image  </Text>
-                            </TouchableOpacity>)
-                        */}
+                            </View>)  :
+                             (<TouchableOpacity style={styles.buttonSmall} onPress={uploadImage}>
+                                 <Text style={styles.buttonTitle}>Upload image  </Text>
+                             </TouchableOpacity>)
+                        }
                     </View>
                 </SafeAreaView>
 
