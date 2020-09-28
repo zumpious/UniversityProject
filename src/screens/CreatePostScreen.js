@@ -185,7 +185,7 @@ export function CreatePostScreen({ navigation }) {
                             .collection('Users')
                             .doc(uid)
                             .update({
-                                posts: postID,
+                                posts: firestore.FieldValue.arrayUnion(postID),
                             })
                             .then(() => {
                                 console.log('postID added to Users document')
@@ -225,7 +225,7 @@ export function CreatePostScreen({ navigation }) {
                         .collection('Users')
                         .doc(uid)
                         .update({
-                            posts: postID,
+                            posts: firestore.FieldValue.arrayUnion(postID),
                         })
                         .then(() => {
                             console.log('postID added to Users document')
@@ -309,7 +309,7 @@ export function CreatePostScreen({ navigation }) {
                                  <Text style={styles.buttonTitle}>Upload image  </Text>
                              </TouchableOpacity>)
                              null
-                       */ }
+                       */}
                     </View>
                 </SafeAreaView>
 
