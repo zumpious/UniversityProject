@@ -225,7 +225,6 @@ export function CreatePostScreen({ navigation }) {
                 <TouchableOpacity
                     style={styles.buttonSmall}
                     onPress={getLocationPermissionAndCoordinates}>
-
                     <Text style={styles.buttonTitle}>Add Location  </Text>
                 </TouchableOpacity>
 

@@ -1,17 +1,18 @@
 import React, {useContext, useState, useEffect} from 'react';
-import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
-import { View, Text, StyleSheet } from 'react-native';
-import { Button } from "react-native-paper";
+import { DefaultTheme, Button, Provider as PaperProvider } from 'react-native-paper';
+import {View, Text, StyleSheet, TouchableOpacity, ScrollView} from 'react-native';
 import { AuthContext } from "../navigation/AuthNavigator";
 import firestore from "@react-native-firebase/firestore";
 import LoadingScreen from "./animations/LoadingScreen";
+import auth from "@react-native-firebase/auth";
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 
 export function HomeScreen({ navigation }) {
     const [loading, setLoading] = useState(false)
     const [userName, setUserName] = useState('')
-
     const user = useContext(AuthContext);
 
+    //get name of current user
     useEffect(() =>  {
         const uid = user.uid
         firestore()
@@ -50,15 +51,25 @@ export function HomeScreen({ navigation }) {
     ) : (
         <PaperProvider>
             <View style={styles.container}>
-                <Text>{'You have sucessfully logged in! \n Welcome back \n' + userName}</Text>
-                <Button
-                    mode="contained"
-                    onPress={() => navigation.navigate('Profil')}
-                    color="#788eec"
-                    labelStyle={{color: "white"}}
-                >
-                    Profil
-                </Button>
+
+                <TouchableOpacity
+                    style={styles.userNameTouch}
+                    onPress={() => {
+                        navigation.navigate('Profil')
+
+                    }}>
+                    <Text style={styles.userNameText}>{userName.split(" ")[0]}  </Text>
+                </TouchableOpacity>
+
+                <KeyboardAwareScrollView
+                    style={{ flex: 1, width: '100%' }}
+                    keyboardShouldPersistTaps="always">
+
+                    <ScrollView style={styles.postsContainer}>
+
+                    </ScrollView>
+
+                </KeyboardAwareScrollView>
             </View>
         </PaperProvider>
     );
@@ -67,19 +78,21 @@ export function HomeScreen({ navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center'
     },
-    input: {
-        height: 48,
-        borderRadius: 5,
-        overflow: 'hidden',
-        backgroundColor: 'white',
-        marginTop: 10,
-        marginBottom: 10,
-        marginLeft: 30,
+    userNameTouch: {
+        alignItems: 'flex-end',
+        marginTop: 30,
         marginRight: 30,
-        paddingLeft: 16
+        marginBottom: 30
+    },
+    userNameText: {
+        fontSize: 18,
+        color: '#788eec'
+    },
+    postsContainer: {
+        marginTop: 30,
+        marginLeft: 30,
+        marginRight: 30
     }
 })
 
