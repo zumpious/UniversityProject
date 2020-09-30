@@ -52,14 +52,17 @@ export function HomeScreen({ navigation }) {
         <PaperProvider>
             <View style={styles.container}>
 
-                <TouchableOpacity
-                    style={styles.userNameTouch}
-                    onPress={() => {
-                        navigation.navigate('Profil')
+                <View style={styles.header}>
+                    <TouchableOpacity
+                        style={styles.userNameTouch}
+                        onPress={() => {
+                            navigation.navigate('Profil')
+                        }}>
+                        <Text style={styles.userNameText}>{userName.split(" ")[0]}  </Text>
+                    </TouchableOpacity>
+                </View>
 
-                    }}>
-                    <Text style={styles.userNameText}>{userName.split(" ")[0]}  </Text>
-                </TouchableOpacity>
+
 
                 <KeyboardAwareScrollView
                     style={{ flex: 1, width: '100%' }}
@@ -79,11 +82,15 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
+    header: {
+        borderBottomWidth: 1,
+        borderColor: 'gray'
+    },
     userNameTouch: {
         alignItems: 'flex-end',
         marginTop: 30,
         marginRight: 30,
-        marginBottom: 30
+        marginBottom: 30,
     },
     userNameText: {
         fontSize: 18,
