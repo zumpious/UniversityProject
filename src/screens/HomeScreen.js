@@ -70,6 +70,8 @@ export function HomeScreen({ navigation }) {
     },[refreshing])
 
     //get data from posts object
+    // ToDo display image instead of its name
+    // ToDo create a map link from longitude and latitude
     let data = [];
     const getPostData = posts => {
         for (let index in posts) {
