@@ -15,9 +15,13 @@ const wait = (timeout) => {
 export function HomeScreen({ navigation }) {
     const [loading, setLoading] = useState(false)
     const [userName, setUserName] = useState('')
-    const [posts, setPosts] = useState([]);
-    const user = useContext(AuthContext);
+    const [posts, setPosts] = useState({});
     const [refreshing, setRefreshing] = React.useState(false);
+
+    const user = useContext(AuthContext);
+    const uid = user.uid
+    const entityRef = firestore().collection('Users').doc(uid);
+
 
     //refresh page handler
     const onRefresh = React.useCallback(() => {
@@ -27,10 +31,7 @@ export function HomeScreen({ navigation }) {
 
     //get name of current user
     useEffect(() =>  {
-        const uid = user.uid
-        firestore()
-            .collection('Users')
-            .doc(uid)
+        entityRef
             .get()
             .then(firestoreDocument => {
                 // TODO remove setTimeout()
@@ -52,14 +53,42 @@ export function HomeScreen({ navigation }) {
                 }
                 const data = firestoreDocument.data()
                 setUserName(data.name);
-                console.log(data.name);
-                //setPosts(data.posts);
             })
             //ToDo implement error handling
             .catch(error => {
                 alert(error)
             });
     });
+
+    //get firestore posts object
+    useEffect(() => {
+        entityRef
+            .onSnapshot(documentSnapshot => {
+                setPosts(documentSnapshot.data().posts)
+            });
+
+    },[refreshing])
+
+    //get data from posts object
+    let data = [];
+    const getPostData = posts => {
+        for (let index in posts) {
+            if (posts.hasOwnProperty(index)) {
+                const item = posts[index];
+                data.push(
+                    <View>
+                        <Text id={item.title}>{item.title}</Text>
+                        <Text id={item.description}>{item.description}</Text>
+                        <Text id={item.image}>{item.image}</Text>
+                        <Text id={item.location.longitude}>{item.location.longitude}</Text>
+                        <Text id={item.location.latitude}>{item.location.latitude}</Text>
+                        <Text>{'\n \n'}</Text>
+                    </View>,
+                )
+            }
+        }
+        return data;
+    }
 
     return loading ? (
         <LoadingScreen />
@@ -77,23 +106,27 @@ export function HomeScreen({ navigation }) {
                     </TouchableOpacity>
                 </View>
 
-
-
                 <KeyboardAwareScrollView
                     style={{ flex: 1, width: '100%' }}
                     keyboardShouldPersistTaps="always">
-
-                    <ScrollView
-                        style={styles.postsContainer}
-                        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-                    >
-                        {posts ? (
-                            <Text> Es gibt Posts </Text>
-                            ) :
-                        <Text>You have no posts</Text>}
-                    </ScrollView>
-
+                    {posts ?
+                        (
+                            <ScrollView
+                                style={styles.postsContainer}
+                                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+                            >
+                                <View>
+                                    {getPostData(posts)}
+                                </View>
+                            </ScrollView>):
+                        (
+                            <View>
+                                <Text>Es gibt keine Posts</Text>
+                            </View>
+                        )
+                    }
                 </KeyboardAwareScrollView>
+
             </View>
         </PaperProvider>
     );
