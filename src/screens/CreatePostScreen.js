@@ -137,6 +137,7 @@ export function CreatePostScreen({ navigation }) {
                 postRef
                     .doc(uid)
                     .update({
+                        //Add new post to the end of posts array
                         posts: firestore.FieldValue.arrayUnion(post),
                     })
                     .then(() => {
@@ -169,6 +170,7 @@ export function CreatePostScreen({ navigation }) {
             postRef
                 .doc(uid)
                 .update({
+                    //Add new post to the end of posts array
                     posts: firestore.FieldValue.arrayUnion(post),
                 })
                 .then(() => {
