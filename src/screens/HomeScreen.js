@@ -60,7 +60,7 @@ export function HomeScreen({ navigation }) {
             });
     });
 
-    //get firestore posts object
+    //get firestore posts object and subscribe on refreshing state
     useEffect(() => {
         entityRef
             .onSnapshot(documentSnapshot => {
