@@ -15,7 +15,7 @@ const wait = (timeout) => {
 export function HomeScreen({ navigation }) {
     const [loading, setLoading] = useState(false)
     const [userName, setUserName] = useState('')
-    const [posts, setPosts] = useState({});
+    const [posts, setPosts] = useState(null);
     const [refreshing, setRefreshing] = React.useState(false);
 
     const user = useContext(AuthContext);
@@ -64,7 +64,9 @@ export function HomeScreen({ navigation }) {
     useEffect(() => {
         entityRef
             .onSnapshot(documentSnapshot => {
-                setPosts(documentSnapshot.data().posts)
+                if(documentSnapshot.get('posts') != null) {
+                    setPosts(documentSnapshot.data().posts)
+                }
             });
 
     },[refreshing])
