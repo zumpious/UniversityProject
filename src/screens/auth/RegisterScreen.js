@@ -15,7 +15,7 @@ export default function RegistrationScreen({navigation}) {
         navigation.navigate('Login')
     }
 
-    //ToDo update error handling
+    //ToDo implement advanced error handling
     const onRegisterPress = () => {
         if (password !== confirmPassword) {
             alert("Passwords don't match.")
@@ -39,10 +39,7 @@ export default function RegistrationScreen({navigation}) {
                         alert(error)
                     });
             })
-            //ToDo implement error handling
-            .catch((error) => {
-                alert(error)
-            });
+            .catch((e) => console.log('An error occurred trying to login: ', e));
     }
 
     return (

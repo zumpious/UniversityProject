@@ -11,13 +11,11 @@ export function LoginScreen({navigation}) {
         navigation.navigate('Registration')
     }
 
+    //ToDo implement advanced error handling
     const onLoginPress = () => {
         auth()
             .signInWithEmailAndPassword(email, password)
-            //ToDo implement error handling
-            .catch(error => {
-                alert(error)
-            });
+            .catch((e) => console.log('An error occurred trying to login: ', e));
     }
 
     return (
