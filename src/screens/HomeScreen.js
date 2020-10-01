@@ -12,6 +12,7 @@ const wait = (timeout) => {
     });
 }
 
+//ToDo implement advanced error handling
 export function HomeScreen({ navigation }) {
     const [loading, setLoading] = useState(false)
     const [userName, setUserName] = useState('')
@@ -34,8 +35,8 @@ export function HomeScreen({ navigation }) {
         entityRef
             .get()
             .then(firestoreDocument => {
-                // TODO remove setTimeout()
                 // This was only added because after registration the firestore document might not be created yet and therefor can't be fetched immediately
+                // TODO remove setTimeout()
                 if (!firestoreDocument.exists) {
                     setLoading(true);
                     setTimeout(() => {
@@ -48,16 +49,14 @@ export function HomeScreen({ navigation }) {
                                 setUserName(data.name);
                                 setLoading(false)
                             })
+                            .catch((e) => console.log('An error occurred getting a firestore document: ', e))
                     },2500)
                     return;
                 }
                 const data = firestoreDocument.data()
                 setUserName(data.name);
             })
-            //ToDo implement error handling
-            .catch(error => {
-                alert(error)
-            });
+            .catch((e) => console.log('An error occurred getting a firestore document: ', e));
     }, []);
 
     //get firestore posts object and subscribe on refreshing state

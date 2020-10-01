@@ -6,15 +6,15 @@ import {Text,
         TextInput,
         TouchableOpacity,
         Image,
-        SafeAreaView } from 'react-native';
+        SafeAreaView} from 'react-native';
 import {Title} from "react-native-paper";
 import Geolocation from 'react-native-geolocation-service';
 import ImagePicker from 'react-native-image-picker';
-import { createUUIDv4 } from "../helpers/helpers";
+import {createUUIDv4} from "../helpers/helpers";
 import {AuthContext} from '../navigation/AuthNavigator';
 import storage from '@react-native-firebase/storage';
 import firestore from '@react-native-firebase/firestore';
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 import LoadingScreen from "./animations/LoadingScreen";
 
 //ToDo split component into smaller pieces
@@ -32,7 +32,6 @@ export function CreatePostScreen({ navigation }) {
     //Get and upload image data
     const [image, setImage] = useState(null);
     const [uploading, setUploading] = useState(false);
-    //const [transferred, setTransferred] = useState(0);
 
     //Create firestore References
     const postRef = firestore().collection('Users');
@@ -47,10 +46,10 @@ export function CreatePostScreen({ navigation }) {
             const granted = await PermissionsAndroid.request(
                 PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
                 {
-                    title: "Cool Location App Permission",
+                    title: "Cool location app permission",
                     message:
-                        "Cool Location App needs access to your location",
-                    buttonNeutral: "Ask Me Later",
+                        "Cool location app needs access to your location",
+                    buttonNeutral: "Ask me later",
                     buttonNegative: "Cancel",
                     buttonPositive: "OK"
                 }
@@ -106,6 +105,7 @@ export function CreatePostScreen({ navigation }) {
     };
 
     //ToDo check that data properties are not null
+    //ToDo implement advanced error handling
     const submitPost = async () => {
         const postID = createUUIDv4();
 
@@ -116,11 +116,12 @@ export function CreatePostScreen({ navigation }) {
         const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
         setUploading(true);
 
-        //upload Image
+        //upload Image to firebase storage
         storage()
             .ref(filename)
             .putFile(uploadUri)
             .then(() => {
+
                 //Create data object
                 let post = {
                     title: title,
@@ -133,6 +134,7 @@ export function CreatePostScreen({ navigation }) {
                     postID: postID,
                     image: filename
                 };
+
                 //post data object to firestore document of user
                 postRef
                     .doc(uid)
@@ -142,19 +144,21 @@ export function CreatePostScreen({ navigation }) {
                     })
                     .then(() => {
                         console.log('post added to Users document')
-                    });
-                    setTitle('');
-                    setDescription('');
-                    setPosition((prevState => ({
-                        latitude: null,
-                        longitude: null,
-                        timestamp: null
-                    })));
-                    setImage(null);
-                    setUploading(false);
+                    })
+                    .catch((e) => console.log('An error occurred uploading the image: ', e));
+                setTitle('');
+                setDescription('');
+                setPosition((prevState => ({
+                    latitude: null,
+                    longitude: null,
+                    timestamp: null
+                })));
+                setImage(null);
+                setUploading(false);
             });
         } else {
-            //Create data object without Image
+
+            //Create data object without uploading an image to firebase storage
             let post = {
                 title: title,
                 description: description,
@@ -166,6 +170,7 @@ export function CreatePostScreen({ navigation }) {
                 postID: postID,
                 image: null
             };
+
             //post data object to firestore document of its user
             postRef
                 .doc(uid)
@@ -174,16 +179,17 @@ export function CreatePostScreen({ navigation }) {
                     posts: firestore.FieldValue.arrayUnion(post),
                 })
                 .then(() => {
-                    console.log('post added to Users document')
-                });
-                setTitle('');
-                setDescription('');
-                setPosition((prevState => ({
-                    latitude: null,
-                    longitude: null,
-                    timestamp: null
-                })));
-            }
+                    console.log('Post added to Users document')
+                })
+                .catch((e) => console.log('An error occurred posting data to firestore document: ', e));
+            setTitle('');
+            setDescription('');
+            setPosition((prevState => ({
+                latitude: null,
+                longitude: null,
+                timestamp: null
+            })));
+        }
 
     }
 
