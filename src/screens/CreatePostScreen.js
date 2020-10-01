@@ -195,7 +195,7 @@ export function CreatePostScreen({ navigation }) {
         ) : (
         <View style={styles.container}>
             <KeyboardAwareScrollView
-                style={{ flex: 1, width: '100%' }}
+                style={{flex: 1, width: '100%'}}
                 keyboardShouldPersistTaps="always">
 
                 <Title style={styles.title}>Title</Title>
@@ -240,7 +240,7 @@ export function CreatePostScreen({ navigation }) {
                     </TouchableOpacity>
                     <View>
                         {image !== null ?
-                            (<Image source={{ uri: image.uri }} style={styles.imageBox} />) :
+                            (<Image source={{uri: image.uri}} style={styles.imageBox} />) :
                             null
                         }
                     </View>

@@ -14,7 +14,7 @@ export default function SignInTab() {
     return(
         <NavigationContainer>
             <Tab.Navigator
-                screenOptions={({ route }) => ({
+                screenOptions={({route}) => ({
                     tabBarIcon: ({ focused, color, size }) => {
                         let iconName;
 
@@ -36,10 +36,7 @@ export default function SignInTab() {
                         return <Ionicons name={iconName} size={size} color={color} />;
                     },
                 })}
-                tabBarOptions={{
-                    activeTintColor: '#788eec',
-                    inactiveTintColor: 'gray',
-                }}
+                tabBarOptions={{activeTintColor: '#788eec', inactiveTintColor: 'gray',}}
             >
                 <Tab.Screen name="Home" component={HomeScreen} />
                 <Tab.Screen name="Post" component={CreatePostScreen} />

@@ -12,7 +12,7 @@ export function LoadingScreen(props) {
                 size={75}
                 thickness={4}
             />
-            { props.uploading ?
+            {props.uploading ?
                 <Text>Uploading...</Text> :
                 null
             }

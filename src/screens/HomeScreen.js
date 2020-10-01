@@ -110,11 +110,10 @@ export function HomeScreen({ navigation }) {
                     </TouchableOpacity>
                 </View>
 
-                <KeyboardAwareScrollView
-                    style={{ flex: 1, width: '100%' }}
+                {posts ?
+                (<KeyboardAwareScrollView
+                    style={{flex: 1, width: '100%'}}
                     keyboardShouldPersistTaps="always">
-                    {posts ?
-                        (
                             <ScrollView
                                 style={styles.postsContainer}
                                 refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
@@ -122,15 +121,20 @@ export function HomeScreen({ navigation }) {
                                 <View>
                                     {getPostData(posts)}
                                 </View>
-                            </ScrollView>):
-                        (
-                            <View>
-                                <Text>Es gibt keine Posts</Text>
-                            </View>
-                        )
-                    }
-                </KeyboardAwareScrollView>
+                            </ScrollView>
+                    </KeyboardAwareScrollView>) :
 
+                    (<View style={styles.center}>
+                        <TouchableOpacity
+                            style={[styles.userNameTouch, {alignItems: 'center', marginTop: 0}]}
+                            onPress={() => {
+                                navigation.navigate('Post')
+                            }}>
+                            <Text>Es gibt aktuell keine Posts für dich.</Text>
+                            <Text style={styles.userNameText}>Füge jetzt einen Post hinzu!  </Text>
+                        </TouchableOpacity>
+                    </View>)
+                }
             </View>
         </PaperProvider>
     );
@@ -143,6 +147,11 @@ const styles = StyleSheet.create({
     header: {
         borderBottomWidth: 1,
         borderColor: 'gray'
+    },
+    center: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     userNameTouch: {
         alignItems: 'flex-end',
