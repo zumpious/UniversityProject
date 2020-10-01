@@ -80,7 +80,7 @@ export function HomeScreen({ navigation }) {
             if (posts.hasOwnProperty(index)) {
                 const item = posts[index];
                 data.push(
-                    <View id={index}>
+                    <View key={index}>
                         <Text id={item.title}>{item.title}</Text>
                         <Text id={item.description}>{item.description}</Text>
                         <Text id={item.image}>{item.image}</Text>
