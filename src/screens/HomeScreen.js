@@ -58,7 +58,7 @@ export function HomeScreen({ navigation }) {
             .catch(error => {
                 alert(error)
             });
-    });
+    }, []);
 
     //get firestore posts object and subscribe on refreshing state
     useEffect(() => {
@@ -111,9 +111,9 @@ export function HomeScreen({ navigation }) {
                 </View>
 
                 {posts ?
-                (<KeyboardAwareScrollView
-                    style={{flex: 1, width: '100%'}}
-                    keyboardShouldPersistTaps="always">
+                    (<KeyboardAwareScrollView
+                        style={{flex: 1, width: '100%'}}
+                        keyboardShouldPersistTaps="always">
                             <ScrollView
                                 style={styles.postsContainer}
                                 refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
@@ -123,7 +123,6 @@ export function HomeScreen({ navigation }) {
                                 </View>
                             </ScrollView>
                     </KeyboardAwareScrollView>) :
-
                     (<View style={styles.center}>
                         <TouchableOpacity
                             style={[styles.userNameTouch, {alignItems: 'center', marginTop: 0}]}
