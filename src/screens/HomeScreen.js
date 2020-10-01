@@ -1,8 +1,9 @@
 import React, {useContext, useState, useEffect} from 'react';
 import { DefaultTheme, Button, Provider as PaperProvider } from 'react-native-paper';
-import {View, Text, StyleSheet, TouchableOpacity, ScrollView, RefreshControl} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, ScrollView, RefreshControl, Image} from 'react-native';
 import { AuthContext } from "../navigation/AuthNavigator";
 import firestore from "@react-native-firebase/firestore";
+import storage from '@react-native-firebase/storage';
 import LoadingScreen from "./animations/LoadingScreen";
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 
@@ -14,9 +15,10 @@ const wait = (timeout) => {
 
 //ToDo implement advanced error handling
 export function HomeScreen({ navigation }) {
-    const [loading, setLoading] = useState(false)
-    const [userName, setUserName] = useState('')
+    const [loading, setLoading] = useState(false);
+    const [userName, setUserName] = useState('');
     const [posts, setPosts] = useState(null);
+    const [downloadURL, setDownloadURL] = useState(null);
     const [refreshing, setRefreshing] = React.useState(false);
 
     const user = useContext(AuthContext);
@@ -70,19 +72,37 @@ export function HomeScreen({ navigation }) {
 
     },[refreshing])
 
+
+    //get image fetching working
+    const getImageUrl = (filename) =>{
+        let imageRef = storage().ref('/' + filename);
+
+        imageRef
+            .getDownloadURL()
+            .then((url) => {
+                return url
+            })
+    }
+
     //get data from posts object
     // ToDo display image instead of its name
     // ToDo create a map link from longitude and latitude
     let data = [];
     const getPostData = posts => {
+
         for (let index in posts) {
             if (posts.hasOwnProperty(index)) {
                 const item = posts[index];
+
                 data.push(
                     <View key={index}>
+
+                        { item.image ?
+                            <Image source={getImageUrl(item.image)} /> :
+                            null
+                        }
                         <Text id={item.title}>{item.title}</Text>
                         <Text id={item.description}>{item.description}</Text>
-                        <Text id={item.image}>{item.image}</Text>
                         <Text id={item.location.longitude}>{item.location.longitude}</Text>
                         <Text id={item.location.latitude}>{item.location.latitude}</Text>
                         <Text>{'\n \n'}</Text>
