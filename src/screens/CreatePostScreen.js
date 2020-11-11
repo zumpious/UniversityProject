@@ -17,7 +17,7 @@ import firestore from '@react-native-firebase/firestore';
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 import LoadingScreen from "./animations/LoadingScreen";
 
-//ToDo split component into smaller pieces
+//ToDo split code into smaller components
 //ToDo remove console.logs and implement advanced error handling to every function
 export function CreatePostScreen({ navigation }) {
     //Firestore document relative data
@@ -39,8 +39,11 @@ export function CreatePostScreen({ navigation }) {
     const uid = user.uid;
 
 
-    //ToDo it does take some time for the geolocation service to fetch to current location, consequently if the user posts before the location service returned to location the data send to firestore is empty
-    //ToDo Upgrade this function and enable passing location via some map API (e.g. Google Maps), but currently picked this solution because Google Maps API is not free to use
+    // It does take some time for the geolocation service to fetch to current location,
+    // consequently if the user posts before the location service returned to location the data
+    // send to firestore is empty
+    //ToDo fix behavior described above
+    //ToDo Upgrade this function and enable passing location via some map API (e.g. Google Maps), currently picked this solution because Google Maps API is not free to use
     const getLocationPermissionAndCoordinates = async () => {
         try {
             const granted = await PermissionsAndroid.request(
