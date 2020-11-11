@@ -14,6 +14,7 @@ const wait = (timeout) => {
 }
 
 //ToDo implement advanced error handling
+//ToDo split code into smaller components
 export function HomeScreen({ navigation }) {
     const [loading, setLoading] = useState(false);
     const [userName, setUserName] = useState('');
@@ -38,7 +39,7 @@ export function HomeScreen({ navigation }) {
             .get()
             .then(firestoreDocument => {
                 // This was only added because after registration the firestore document might not be created yet and therefor can't be fetched immediately
-                // TODO remove setTimeout()
+                // TODO remove setTimeout() --> Update to JS promises
                 if (!firestoreDocument.exists) {
                     setLoading(true);
                     setTimeout(() => {
@@ -96,7 +97,6 @@ export function HomeScreen({ navigation }) {
 
                 data.push(
                     <View key={index}>
-
                         { item.image ?
                             <Image source={getImageUrl(item.image)} /> :
                             null
