@@ -23,7 +23,6 @@ export default function RegistrationScreen({navigation}) {
         navigation.navigate('Login')
     }
 
-    //ToDo tell the user that that an entered email is already used onscreen (currently only logs in console)
     const onRegisterPress = () => {
         //Reset errors
         setError(false);
