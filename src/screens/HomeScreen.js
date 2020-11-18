@@ -19,7 +19,6 @@ export function HomeScreen({ navigation }) {
     const [loading, setLoading] = useState(false);
     const [userName, setUserName] = useState('');
     const [posts, setPosts] = useState(null);
-    const [downloadURL, setDownloadURL] = useState(null);
     const [refreshing, setRefreshing] = React.useState(false);
 
     const user = useContext(AuthContext);
@@ -86,7 +85,7 @@ export function HomeScreen({ navigation }) {
     }
 
     //get data from posts object
-    // ToDo display image instead of its name
+    // ToDo add new post at top of array
     // ToDo create a map link from longitude and latitude
     let data = [];
     const getPostData = posts => {
