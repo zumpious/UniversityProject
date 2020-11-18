@@ -6,17 +6,25 @@ import auth from '@react-native-firebase/auth';
 export function LoginScreen({navigation}) {
     const [email, setEmail] = useState(null);
     const [password, setPassword] = useState(null);
-    const [errorMsg, setErrorMsg] = useState(null);
-    const [error, setError] = useState(false);
+
     const [emailErr, setEmailErr] = useState(false);
     const [passwordErr, setPasswordErr] = useState(false);
+
+    const [errorMsg, setErrorMsg] = useState(null);
+    const [error, setError] = useState(false);
 
     const onFooterLinkPress = () => {
         navigation.navigate('Registration')
     }
 
     const onLoginPress = () => {
-        //Null check input
+        //Reset errors
+        setError(false);
+        setErrorMsg(null);
+        setEmailErr(false);
+        setPasswordErr(false);
+
+        //Null check input options
         if (email === null && password === null) {
             setEmailErr(true);
             setPasswordErr(true);
