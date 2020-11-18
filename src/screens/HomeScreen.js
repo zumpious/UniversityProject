@@ -94,7 +94,6 @@ export function HomeScreen({ navigation }) {
             if (posts.hasOwnProperty(index)) {
                 const item = posts[index];
 
-                console.log(item.image);
                 data.push(
                     <View key={index}>
                         {item.image ?
@@ -153,6 +152,7 @@ export function HomeScreen({ navigation }) {
                         </TouchableOpacity>
                     </View>)
                 }
+
             </View>
         </PaperProvider>
     );

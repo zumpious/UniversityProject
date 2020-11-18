@@ -4,8 +4,10 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import auth from '@react-native-firebase/auth';
 
 export function LoginScreen({navigation}) {
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
+    const [email, setEmail] = useState(null);
+    const [password, setPassword] = useState(null);
+    const [errorMsg, setErrorMsg] = useState(null);
+    const [error, setError] = useState(false);
 
     const onFooterLinkPress = () => {
         navigation.navigate('Registration')
@@ -13,9 +15,25 @@ export function LoginScreen({navigation}) {
 
     //ToDo implement advanced error handling
     const onLoginPress = () => {
+        if (email === null && password === null) {
+            console.log("email and password is null");
+            return;
+        } else if(email === null && password !== null) {
+            console.log("email is null");
+            return;
+        } else if (email !== null && password === null){
+            console.log("password is null");
+            return;
+        }
+
         auth()
             .signInWithEmailAndPassword(email, password)
-            .catch((e) => console.log('An error occurred trying to login: ', e));
+            .catch((err) =>{
+                console.log(err);
+                setEmail(null);
+                setPassword(null);
+            });
+
     }
 
     return (
