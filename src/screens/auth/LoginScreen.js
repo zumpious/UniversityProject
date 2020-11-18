@@ -8,6 +8,8 @@ export function LoginScreen({navigation}) {
     const [password, setPassword] = useState(null);
     const [errorMsg, setErrorMsg] = useState(null);
     const [error, setError] = useState(false);
+    const [emailErr, setEmailErr] = useState(false);
+    const [passwordErr, setPasswordErr] = useState(false);
 
     const onFooterLinkPress = () => {
         navigation.navigate('Registration')
@@ -16,33 +18,49 @@ export function LoginScreen({navigation}) {
     //ToDo implement advanced error handling
     const onLoginPress = () => {
         if (email === null && password === null) {
-            console.log("email and password is null");
             return;
         } else if(email === null && password !== null) {
-            console.log("email is null");
+            setEmailErr(true);
             return;
         } else if (email !== null && password === null){
-            console.log("password is null");
+            setPasswordErr(true);
             return;
         }
 
         auth()
             .signInWithEmailAndPassword(email, password)
             .catch((err) =>{
-                console.log(err);
                 setEmail(null);
                 setPassword(null);
+                setEmailErr(null);
+                setPasswordErr(null);
+
+                setError(true);
+
+                if(err.code === "auth/invalid-email"){
+                    setErrorMsg("You entered a wrong email. Please try again!");
+                } else if (err.code === "auth/wrong-password"){
+                    setErrorMsg("You entered a wrong password. Please Try Again!");
+                } else if (err.code === "auth/user-not-found"){
+                    setErrorMsg("User not found. Please Try Again!");
+                } else {
+                    setErrorMsg("Something went wrong. Please Log In again");
+                }
             });
 
     }
 
     return (
         <View style={styles.container}>
+            {error ?
+                (<Text style={styles.errorText}>{errorMsg}</Text>) :
+                null
+            }
             <KeyboardAwareScrollView
                 style={{ flex: 1, width: '100%' }}
                 keyboardShouldPersistTaps="always">
                 <TextInput
-                    style={styles.input}
+                    style={emailErr ? styles.inputRed : styles.input}
                     placeholder='E-mail'
                     placeholderTextColor="#aaaaaa"
                     onChangeText={(text) => setEmail(text)}
@@ -51,7 +69,7 @@ export function LoginScreen({navigation}) {
                     autoCapitalize="none"
                 />
                 <TextInput
-                    style={styles.input}
+                    style={passwordErr ? styles.inputRed : styles.input}
                     placeholderTextColor="#aaaaaa"
                     secureTextEntry
                     placeholder='Password'
@@ -98,7 +116,20 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         marginLeft: 30,
         marginRight: 30,
-        paddingLeft: 16
+        paddingLeft: 16,
+    },
+    inputRed: {
+        height: 48,
+        borderRadius: 5,
+        overflow: 'hidden',
+        backgroundColor: 'white',
+        marginTop: 10,
+        marginBottom: 10,
+        marginLeft: 30,
+        marginRight: 30,
+        paddingLeft: 16,
+        borderWidth: 1,
+        borderColor: 'red'
     },
     button: {
         backgroundColor: '#788eec',
@@ -128,6 +159,12 @@ const styles = StyleSheet.create({
         color: "#788eec",
         fontWeight: "bold",
         fontSize: 16
+    },
+    errorText: {
+        color: 'red',
+        fontSize: 14,
+        marginTop: 30,
+        marginBottom: 20
     }
 })
 
