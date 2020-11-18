@@ -98,10 +98,11 @@ export function HomeScreen({ navigation }) {
                 console.log(item.image);
                 data.push(
                     <View key={index}>
-
-                        <Image style={styles.imageBox} source={item.image && {uri: item.image}} />
+                        {item.image ?
+                            <Image style={styles.imageBox} source={item.image && {uri: item.image}} /> :
+                            null
+                        }
                         <Text id={item.title}>{item.title}</Text>
-                        <Text id={item.image}>{item.image}</Text>
                         <Text id={item.description}>{item.description}</Text>
                         <Text id={item.location.longitude}>{item.location.longitude}</Text>
                         <Text id={item.location.latitude}>{item.location.latitude}</Text>
