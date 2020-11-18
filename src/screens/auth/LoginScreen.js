@@ -29,12 +29,10 @@ export function LoginScreen({navigation}) {
             setEmailErr(true);
             setPasswordErr(true);
             return;
-        } else if(email === null && password !== null) {
-            setPasswordErr(false);
+        } else if(email === null) {
             setEmailErr(true);
             return;
-        } else if (email !== null && password === null){
-            setEmailErr(false);
+        } else if (password === null){
             setPasswordErr(true);
             return;
         }
@@ -49,9 +47,9 @@ export function LoginScreen({navigation}) {
 
                 setError(true);
 
-                //Show errer Message to User
+                //Display invalid input to user
                 if(err.code === "auth/invalid-email"){
-                    setErrorMsg("You entered a wrong email. Please try again!");
+                    setErrorMsg("You entered a wrong E-Mail. Please try again!");
                 } else if (err.code === "auth/wrong-password"){
                     setErrorMsg("You entered a wrong password. Please Try Again!");
                 } else if (err.code === "auth/user-not-found"){
@@ -74,7 +72,7 @@ export function LoginScreen({navigation}) {
                 keyboardShouldPersistTaps="always">
                 <TextInput
                     style={emailErr ? styles.inputRed : styles.input}
-                    placeholder='E-mail'
+                    placeholder='E-Mail'
                     placeholderTextColor="#aaaaaa"
                     onChangeText={(text) => setEmail(text)}
                     value={email}
@@ -177,7 +175,8 @@ const styles = StyleSheet.create({
         color: 'red',
         fontSize: 14,
         marginTop: 30,
-        marginBottom: 20
+        marginBottom: 20,
+        marginLeft: 30
     }
 })
 
