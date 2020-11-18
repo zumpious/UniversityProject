@@ -29,7 +29,7 @@ export function HomeScreen({ navigation }) {
     //refresh page handler
     const onRefresh = React.useCallback(() => {
         setRefreshing(true);
-        wait(2000).then(() => setRefreshing(false));
+        wait(3000).then(() => setRefreshing(false));
     }, []);
 
     //get name of current user
@@ -71,18 +71,6 @@ export function HomeScreen({ navigation }) {
             });
 
     },[refreshing])
-
-
-    //get image fetching working
-    const getImageUrl = (filename) =>{
-        let imageRef = storage().ref('/' + filename);
-
-        imageRef
-            .getDownloadURL()
-            .then((url) => {
-                return url
-            })
-    }
 
     //get data from posts object
     // ToDo add new post at top of array

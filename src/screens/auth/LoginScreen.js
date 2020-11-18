@@ -15,7 +15,6 @@ export function LoginScreen({navigation}) {
         navigation.navigate('Registration')
     }
 
-    //ToDo implement advanced error handling
     const onLoginPress = () => {
         if (email === null && password === null) {
             return;
