@@ -16,12 +16,17 @@ export function LoginScreen({navigation}) {
     }
 
     const onLoginPress = () => {
+        //Null check input
         if (email === null && password === null) {
+            setEmailErr(true);
+            setPasswordErr(true);
             return;
         } else if(email === null && password !== null) {
+            setPasswordErr(false);
             setEmailErr(true);
             return;
         } else if (email !== null && password === null){
+            setEmailErr(false);
             setPasswordErr(true);
             return;
         }
@@ -36,6 +41,7 @@ export function LoginScreen({navigation}) {
 
                 setError(true);
 
+                //Show errer Message to User
                 if(err.code === "auth/invalid-email"){
                     setErrorMsg("You entered a wrong email. Please try again!");
                 } else if (err.code === "auth/wrong-password"){
