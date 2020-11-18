@@ -109,6 +109,7 @@ export function CreatePostScreen({ navigation }) {
 
     //ToDo check that data properties are not null
     //ToDo implement advanced error handling
+    //ToDo generate Donwload URL here
     const submitPost = async () => {
         const postID = createUUIDv4();
 

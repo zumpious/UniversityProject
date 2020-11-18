@@ -16,6 +16,7 @@ export default function RegistrationScreen({navigation}) {
     }
 
     //ToDo implement advanced error handling
+    //ToDo tell the user that that an entered email is already used onscreen (currently only logs in console)
     const onRegisterPress = () => {
         if (password !== confirmPassword) {
             alert("Passwords don't match.")
