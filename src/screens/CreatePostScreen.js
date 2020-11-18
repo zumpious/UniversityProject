@@ -124,42 +124,57 @@ export function CreatePostScreen({ navigation }) {
         storage()
             .ref(filename)
             .putFile(uploadUri)
-            .then(() => {
+            .on(
+                'state_changed',
+                snapshot => {
+                    console.log("snapshot: " + snapshot);
+                },
+                error => {
+                    console.log('uploading image error => ' + error);
+                },
+                () => {
+                    storage()
+                        .ref(filename)
+                        .getDownloadURL()
+                        .then((downloadUrl) => {
+                            console.log(downloadUrl);
+                            //Create data object
+                            let post = {
+                                title: title,
+                                description: description,
+                                location: {
+                                    timestamp: position.timestamp,
+                                    longitude: position.longitude,
+                                    latitude: position.latitude
+                                },
+                                postID: postID,
+                                image: downloadUrl
+                            };
 
-                //Create data object
-                let post = {
-                    title: title,
-                    description: description,
-                    location: {
-                        timestamp: position.timestamp,
-                        longitude: position.longitude,
-                        latitude: position.latitude
-                    },
-                    postID: postID,
-                    image: filename
-                };
+                            //post data object to firestore document of user
+                            postRef
+                                .doc(uid)
+                                .update({
+                                    //Add new post to the end of posts array
+                                    posts: firestore.FieldValue.arrayUnion(post),
+                                })
+                                .then(() => {
+                                    console.log('post added to Users document')
+                                })
+                                .catch((e) => console.log('An error occurred uploading the image: ', e));
+                            setTitle('');
+                            setDescription('');
+                            setPosition((prevState => ({
+                                latitude: null,
+                                longitude: null,
+                                timestamp: null
+                            })));
+                            setImage(null);
+                            setUploading(false);
 
-                //post data object to firestore document of user
-                postRef
-                    .doc(uid)
-                    .update({
-                        //Add new post to the end of posts array
-                        posts: firestore.FieldValue.arrayUnion(post),
-                    })
-                    .then(() => {
-                        console.log('post added to Users document')
-                    })
-                    .catch((e) => console.log('An error occurred uploading the image: ', e));
-                setTitle('');
-                setDescription('');
-                setPosition((prevState => ({
-                    latitude: null,
-                    longitude: null,
-                    timestamp: null
-                })));
-                setImage(null);
-                setUploading(false);
-            });
+                        })
+                }
+            );
         } else {
 
             //Create data object without uploading an image to firebase storage

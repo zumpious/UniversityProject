@@ -95,13 +95,13 @@ export function HomeScreen({ navigation }) {
             if (posts.hasOwnProperty(index)) {
                 const item = posts[index];
 
+                console.log(item.image);
                 data.push(
                     <View key={index}>
-                        { item.image ?
-                            <Image source={getImageUrl(item.image)} /> :
-                            null
-                        }
+
+                        <Image style={styles.imageBox} source={item.image && {uri: item.image}} />
                         <Text id={item.title}>{item.title}</Text>
+                        <Text id={item.image}>{item.image}</Text>
                         <Text id={item.description}>{item.description}</Text>
                         <Text id={item.location.longitude}>{item.location.longitude}</Text>
                         <Text id={item.location.latitude}>{item.location.latitude}</Text>
@@ -185,6 +185,11 @@ const styles = StyleSheet.create({
         marginTop: 30,
         marginLeft: 30,
         marginRight: 30
+    },
+    imageBox: {
+        marginLeft: 30,
+        width: 300,
+        height: 300
     }
 })
 
