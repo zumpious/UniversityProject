@@ -20,30 +20,37 @@ import LoadingScreen from "./animations/LoadingScreen";
 //ToDo split code into smaller components
 //ToDo remove console.logs and implement advanced error handling to every function
 export function CreatePostScreen({ navigation }) {
+    //Create firestore References
+    const postRef = firestore().collection('Users');
+    const user = useContext(AuthContext);
+    const uid = user.uid;
+
     //Firestore document relative data
-    const [title, setTitle] = useState('');
-    const [description, setDescription] = useState('');
+    const [title, setTitle] = useState(null);
+    const [description, setDescription] = useState(null);
     const [position, setPosition] = useState({
         latitude: null,
         longitude: null,
         timestamp: null
     });
 
+    //Needed to handle invalid input
+    const [titleErr, setTitleErr] = useState(false);
+    const [desrciptionErr, setDescriptionErr] = useState(false);
+    const [positionErr, setPositionErr] = useState(false);
+    const [errorMsg, setErrorMsg] = useState(null);
+    const [error, setError] = useState(false);
+
     //Get and upload image data
     const [image, setImage] = useState(null);
     const [uploading, setUploading] = useState(false);
-
-    //Create firestore References
-    const postRef = firestore().collection('Users');
-    const user = useContext(AuthContext);
-    const uid = user.uid;
 
 
     // It does take some time for the geolocation service to fetch to current location,
     // consequently if the user posts before the location service returned to location the data
     // send to firestore is empty
     //ToDo fix behavior described above
-    //ToDo Upgrade this function and enable passing location via some map API (e.g. Google Maps), currently picked this solution because Google Maps API is not free to use
+    //ToDo Upgrade this function and enable passing location via some map API (e.g. Google Maps)
     const getLocationPermissionAndCoordinates = async () => {
         try {
             const granted = await PermissionsAndroid.request(
@@ -107,10 +114,31 @@ export function CreatePostScreen({ navigation }) {
         });
     };
 
-    //ToDo check that data properties are not null
-    //ToDo implement advanced error handling
-    //ToDo generate Donwload URL here
     const submitPost = async () => {
+        //reset erros
+        setError(false);
+        setErrorMsg(null);
+        setTitleErr(null);
+        setDescriptionErr(null);
+        setPositionErr(null);
+
+        //Null check and show the user what input is missing
+        if (title === null && description === null && position.latitude === null) {
+            setError(true);
+            setErrorMsg("Please enter the required values! (Title, Description and Location Parameters)");
+            return;
+        } else if(title === null){
+            setTitleErr(true);
+            return;
+        } else if(description === null){
+            setDescriptionErr(true);
+            return;
+        } else if(position.longitude === null) {
+            setPositionErr(true);
+            return;
+        }
+
+        //generate PostID
         const postID = createUUIDv4();
 
         //Post data with Image
@@ -137,7 +165,6 @@ export function CreatePostScreen({ navigation }) {
                         .ref(filename)
                         .getDownloadURL()
                         .then((downloadUrl) => {
-                            console.log(downloadUrl);
                             //Create data object
                             let post = {
                                 title: title,
@@ -162,21 +189,26 @@ export function CreatePostScreen({ navigation }) {
                                     console.log('post added to Users document')
                                 })
                                 .catch((e) => console.log('An error occurred uploading the image: ', e));
-                            setTitle('');
-                            setDescription('');
+                            setTitle(null);
+                            setDescription(null);
                             setPosition((prevState => ({
                                 latitude: null,
                                 longitude: null,
                                 timestamp: null
                             })));
+
                             setImage(null);
                             setUploading(false);
 
+                            setTitleErr(false);
+                            setDescriptionErr(false);
+                            setPositionErr(false);
+                            setError(false);
+                            setErrorMsg(null);
                         })
                 }
             );
         } else {
-
             //Create data object without uploading an image to firebase storage
             let post = {
                 title: title,
@@ -201,15 +233,19 @@ export function CreatePostScreen({ navigation }) {
                     console.log('Post added to Users document')
                 })
                 .catch((e) => console.log('An error occurred posting data to firestore document: ', e));
-            setTitle('');
-            setDescription('');
+            setTitle(null);
+            setDescription(null);
             setPosition((prevState => ({
                 latitude: null,
                 longitude: null,
                 timestamp: null
             })));
+            setTitleErr(false);
+            setDescriptionErr(false);
+            setPositionErr(false);
+            setError(false);
+            setErrorMsg(null);
         }
-
     }
 
     //ToDo think about a way that allows the user to easy delete the value of an input area (e.g. delete button inside the textInput)
@@ -219,13 +255,17 @@ export function CreatePostScreen({ navigation }) {
         <LoadingScreen uploading={true} />
         ) : (
         <View style={styles.container}>
+            {error ?
+                (<Text style={styles.errorText}>{errorMsg}</Text>) :
+                null
+            }
             <KeyboardAwareScrollView
                 style={{flex: 1, width: '100%'}}
                 keyboardShouldPersistTaps="always">
 
                 <Title style={styles.title}>Title</Title>
                 <TextInput
-                    style={styles.input}
+                    style={titleErr ? styles.inputRed : styles.input}
                     placeholder='Title'
                     placeholderTextColor="#aaaaaa"
                     onChangeText={(text) => setTitle(text)}
@@ -236,7 +276,7 @@ export function CreatePostScreen({ navigation }) {
 
                 <Title style={styles.title}>Description</Title>
                 <TextInput
-                    style={[styles.input, styles.description]}
+                    style={desrciptionErr ? [styles.inputRed, styles.description] : [styles.input, styles.description]}
                     placeholder='Description'
                     placeholderTextColor="#aaaaaa"
                     onChangeText={(text) => setDescription(text)}
@@ -249,6 +289,11 @@ export function CreatePostScreen({ navigation }) {
 
 
                 <Title style={{marginLeft: 30}}>Add Location</Title>
+                {positionErr ?
+                    (<Text style={[styles.errorText, {marginTop: 5, marginBottom: 5}]}>
+                    Please add location parameters!</Text>) :
+                    null
+                }
                 <TouchableOpacity
                     style={styles.buttonSmall}
                     onPress={getLocationPermissionAndCoordinates}>
@@ -306,6 +351,19 @@ const styles = StyleSheet.create({
         marginRight: 30,
         paddingLeft: 16
     },
+    inputRed: {
+        height: 48,
+        borderRadius: 5,
+        overflow: 'hidden',
+        backgroundColor: 'white',
+        marginTop: 10,
+        marginBottom: 10,
+        marginLeft: 30,
+        marginRight: 30,
+        paddingLeft: 16,
+        borderWidth: 1,
+        borderColor: 'red'
+    },
     description: {
         height: 96,
         marginTop: 10,
@@ -348,10 +406,17 @@ const styles = StyleSheet.create({
         marginLeft: 30
     },
     submitPost: {
-    width: '85%',
-    justifyContent: 'center',
-    alignItems: "center",
-    marginTop: 50
+        width: '85%',
+        justifyContent: 'center',
+        alignItems: "center",
+        marginTop: 50
+    },
+    errorText: {
+        color: 'red',
+        fontSize: 14,
+        marginTop: 30,
+        marginBottom: 20,
+        marginLeft: 30
     }
 });
 
