@@ -82,7 +82,7 @@ export function HomeScreen({ navigation }) {
             if (posts.hasOwnProperty(index)) {
                 const item = posts[index];
 
-                data.push(
+                data.unshift(
                     <View key={index}>
                         {item.image ?
                             <Image style={styles.imageBox} source={item.image && {uri: item.image}} /> :
