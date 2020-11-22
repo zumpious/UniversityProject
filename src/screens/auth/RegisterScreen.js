@@ -32,7 +32,7 @@ export default function RegistrationScreen({navigation}) {
         setPasswordErr(false);
         setConfirmPasswordErr(false);
 
-        //Null check each input value
+        //Null check and show the user what input is missing
         if (fullName === null && email === null && password === null && confirmPassword === null) {
             setError(true);
             setErrorMsg("Please enter the required values!");
@@ -73,7 +73,7 @@ export default function RegistrationScreen({navigation}) {
                         .doc(uid)
                         .set(data)
                     .catch((error) => {
-                        //ToDo add errer handling
+                        //ToDo add error handling
                         alert(error)
                     });
             })
@@ -83,14 +83,14 @@ export default function RegistrationScreen({navigation}) {
                 setPassword(null);
                 setConfirmPassword(null);
 
-                setFullNameErr(null);
-                setEmailErr(null);
-                setPasswordErr(null);
-                setConfirmPasswordErr(null);
+                setFullNameErr(false);
+                setEmailErr(false);
+                setPasswordErr(false);
+                setConfirmPasswordErr(false);
 
                 setError(true);
 
-                //Display invalid input to user
+                //Show invalid input to user
                 if (err.code === "auth/invalid-email"){
                     setErrorMsg("You entered an invalid E-Mail. Please try again!");
                 } else if (err.code === "auth/email-already-in-use") {
