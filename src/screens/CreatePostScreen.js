@@ -114,8 +114,6 @@ export function CreatePostScreen({ navigation }) {
         });
     };
 
-    //ToDo check that data properties are not null
-    //ToDo implement advanced error handling
     const submitPost = async () => {
         //reset erros
         setError(false);
