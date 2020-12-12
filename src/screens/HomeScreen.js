@@ -72,7 +72,7 @@ export function HomeScreen({ navigation }) {
 
     },[refreshing])
 
-    //get data from posts object
+    //get data from posts object and transform data into view
     // ToDo add new post at top of array
     // ToDo create a map link from longitude and latitude
     let data = [];

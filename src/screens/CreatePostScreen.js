@@ -18,6 +18,7 @@ import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 import LoadingScreen from "./animations/LoadingScreen";
 
 //ToDo split code into smaller components
+//ToDo handle app behavior without internet connection
 //ToDo remove console.logs and implement advanced error handling to every function
 export function CreatePostScreen({ navigation }) {
     //Create firestore References
@@ -34,16 +35,16 @@ export function CreatePostScreen({ navigation }) {
         timestamp: null
     });
 
-    //Needed to handle invalid input
+    //Handle image upload state vars
+    const [image, setImage] = useState(null);
+    const [uploading, setUploading] = useState(false);
+
+    //Handle invalid input state vars
     const [titleErr, setTitleErr] = useState(false);
     const [desrciptionErr, setDescriptionErr] = useState(false);
     const [positionErr, setPositionErr] = useState(false);
     const [errorMsg, setErrorMsg] = useState(null);
     const [error, setError] = useState(false);
-
-    //Get and upload image data
-    const [image, setImage] = useState(null);
-    const [uploading, setUploading] = useState(false);
 
 
     // It does take some time for the geolocation service to fetch to current location,
@@ -73,7 +74,8 @@ export function CreatePostScreen({ navigation }) {
                             latitude: position.coords.latitude,
                             longitude: position.coords.longitude,
                             timestamp: position.timestamp
-                        })))
+                        })));
+                        setPositionErr(false);
                     },
                     (error) => {
                         // See error code charts below.
@@ -148,7 +150,7 @@ export function CreatePostScreen({ navigation }) {
         const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
         setUploading(true);
 
-        //upload Image to firebase storage
+        //upload Image to firebase storage and send post data to firestore
         storage()
             .ref(filename)
             .putFile(uploadUri)
@@ -189,6 +191,8 @@ export function CreatePostScreen({ navigation }) {
                                     console.log('post added to Users document')
                                 })
                                 .catch((e) => console.log('An error occurred uploading the image: ', e));
+
+                            //reset the states
                             setTitle(null);
                             setDescription(null);
                             setPosition((prevState => ({
@@ -233,6 +237,8 @@ export function CreatePostScreen({ navigation }) {
                     console.log('Post added to Users document')
                 })
                 .catch((e) => console.log('An error occurred posting data to firestore document: ', e));
+
+            //reset states
             setTitle(null);
             setDescription(null);
             setPosition((prevState => ({
@@ -250,7 +256,6 @@ export function CreatePostScreen({ navigation }) {
 
     //ToDo think about a way that allows the user to easy delete the value of an input area (e.g. delete button inside the textInput)
     //ToDo rework styling and design of the buttons
-    //ToDo display the used location data after fetching it, e.g. next to its button or remove the location button and fetch coords on post submit
     return ( uploading ? (
         <LoadingScreen uploading={true} />
         ) : (
@@ -291,16 +296,32 @@ export function CreatePostScreen({ navigation }) {
                 <Title style={{marginLeft: 30}}>Add Location</Title>
                 {positionErr ?
                     (<Text style={[styles.errorText, {marginTop: 5, marginBottom: 5}]}>
-                    Please add location parameters!</Text>) :
+                        Please add location parameters by clicking the button below!
+                    </Text>) :
                     null
                 }
                 <TouchableOpacity
-                    style={styles.buttonSmall}
+                    style={[styles.buttonSmall, {marginBottom: 5}]}
                     onPress={getLocationPermissionAndCoordinates}>
                     <Text style={styles.buttonTitle}>Add Location  </Text>
                 </TouchableOpacity>
 
-                <Title style={{marginLeft: 30}}>Add Photo</Title>
+                <Text style={styles.coordsText}>Longitude :&nbsp;
+                    {
+                        position.longitude ?
+                        position.longitude :
+                        <Text style={{color: '#aaa'}}> xx.xxxxxx</Text>
+                    }
+                </Text>
+                <Text style={styles.coordsText}>Latitude :&nbsp;
+                    {
+                        position.latitude ?
+                        position.latitude :
+                        <Text style={{color: '#aaa'}}> xx.xxxxxx</Text>
+                    }
+                </Text>
+
+                <Title style={styles.title}>Add Photo</Title>
                 <SafeAreaView>
                     <TouchableOpacity style={styles.buttonSmall} onPress={selectImage}>
                         {image === null ?
@@ -417,6 +438,12 @@ const styles = StyleSheet.create({
         marginTop: 30,
         marginBottom: 20,
         marginLeft: 30
+    },
+    coordsText: {
+        fontSize: 16,
+        marginTop: 5,
+        marginLeft: 30,
+        marginRight: 30
     }
 });
 
