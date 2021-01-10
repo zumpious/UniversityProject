@@ -1,9 +1,9 @@
 import React, {useContext, useState, useEffect} from 'react';
 import { DefaultTheme, Button, Provider as PaperProvider } from 'react-native-paper';
-import {View, Text, StyleSheet, TouchableOpacity, ScrollView, RefreshControl, Image} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, ScrollView, RefreshControl,Dimensions} from 'react-native';
 import { AuthContext } from "../navigation/AuthNavigator";
 import firestore from "@react-native-firebase/firestore";
-import storage from '@react-native-firebase/storage';
+import Image from "react-native-scalable-image";
 import LoadingScreen from "./animations/LoadingScreen";
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 
@@ -19,11 +19,13 @@ export function HomeScreen({ navigation }) {
     const [loading, setLoading] = useState(false);
     const [userName, setUserName] = useState('');
     const [posts, setPosts] = useState(null);
-    const [refreshing, setRefreshing] = React.useState(false);
+    const [refreshing, setRefreshing] = useState(false);
 
     const user = useContext(AuthContext);
     const uid = user.uid
     const entityRef = firestore().collection('Users').doc(uid);
+
+    const window = Dimensions.get('window');
 
 
     //refresh page handler
@@ -72,12 +74,11 @@ export function HomeScreen({ navigation }) {
 
     },[refreshing])
 
-    //get data from posts object and transform data into view
-    // ToDo add new post at top of array
+    // get data from posts object and transform data into view
     // ToDo create a map link from longitude and latitude
+    // ToDo every image should be displayed in same size
     let data = [];
     const getPostData = posts => {
-
         for (let index in posts) {
             if (posts.hasOwnProperty(index)) {
                 const item = posts[index];
@@ -85,14 +86,18 @@ export function HomeScreen({ navigation }) {
                 data.unshift(
                     <View key={index}>
                         {item.image ?
-                            <Image style={styles.imageBox} source={item.image && {uri: item.image}} /> :
+                            <Image
+                                width={window.width}
+                                source={item.image && {uri: item.image}}
+                            /> :
                             null
                         }
-                        <Text id={item.title}>{item.title}</Text>
-                        <Text id={item.description}>{item.description}</Text>
-                        <Text id={item.location.longitude}>{item.location.longitude}</Text>
-                        <Text id={item.location.latitude}>{item.location.latitude}</Text>
-                        <Text>{'\n \n'}</Text>
+                        <View style={styles.postsContainer}>
+                            <Text id={item.title}>{item.title}</Text>
+                            <Text id={item.description}>{item.description}</Text>
+                            <Text id={item.location.longitude}>{item.location.longitude}</Text>
+                            <Text id={item.location.latitude}>{item.location.latitude}</Text>
+                        </View>
                     </View>,
                 )
             }
@@ -121,7 +126,6 @@ export function HomeScreen({ navigation }) {
                         style={{flex: 1, width: '100%'}}
                         keyboardShouldPersistTaps="always">
                             <ScrollView
-                                style={styles.postsContainer}
                                 refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
                             >
                                 <View>
@@ -170,12 +174,12 @@ const styles = StyleSheet.create({
         color: '#788eec'
     },
     postsContainer: {
-        marginTop: 30,
-        marginLeft: 30,
-        marginRight: 30
+        marginLeft: 20,
+        marginRight: 20,
+        marginBottom: 30
     },
     imageBox: {
-        marginLeft: 30,
+        flex: 1,
         width: 300,
         height: 300
     }
