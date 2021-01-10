@@ -5,3 +5,9 @@ export function createUUIDv4() {
         return v.toString(16);
     });
 }
+
+//generate OS specific map link form latitude and longitude
+export function getGpsURL(latitude, longitude) {
+    let scheme = Platform.OS === 'ios' ? 'maps:' : 'geo:';
+    return scheme + `${latitude},${longitude}`;
+}

@@ -1,11 +1,12 @@
 import React, {useContext, useState, useEffect} from 'react';
 import { DefaultTheme, Button, Provider as PaperProvider } from 'react-native-paper';
-import {View, Text, StyleSheet, TouchableOpacity, ScrollView, RefreshControl,Dimensions} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, ScrollView, RefreshControl,Dimensions, Linking} from 'react-native';
 import { AuthContext } from "../navigation/AuthNavigator";
 import firestore from "@react-native-firebase/firestore";
 import Image from "react-native-scalable-image";
 import LoadingScreen from "./animations/LoadingScreen";
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
+import {getGpsURL, openGps} from "../helpers/helpers";
 
 const wait = (timeout) => {
     return new Promise(resolve => {
@@ -84,19 +85,27 @@ export function HomeScreen({ navigation }) {
                 const item = posts[index];
 
                 data.unshift(
-                    <View key={index}>
+                    <View key={index} style={styles.postsContainer}>
+                        <View style={styles.postsContainerTop}>
+                            <Text styles={styles.title} id={item.title}>{item.title}</Text>
+                        </View>
                         {item.image ?
-                            <Image
-                                width={window.width}
-                                source={item.image && {uri: item.image}}
-                            /> :
+                            <View styles={styles.imageContainer}>
+                                <Image
+                                    width={window.width}
+                                    source={item.image && {uri: item.image}}
+                                />
+                            </View>:
                             null
                         }
-                        <View style={styles.postsContainer}>
-                            <Text id={item.title}>{item.title}</Text>
+                        <View style={styles.postsContainerBottom}>
                             <Text id={item.description}>{item.description}</Text>
-                            <Text id={item.location.longitude}>{item.location.longitude}</Text>
-                            <Text id={item.location.latitude}>{item.location.latitude}</Text>
+                            <TouchableOpacity
+                                onPress={() =>
+                                Linking.openURL(getGpsURL(item.location.latitude, item.location.longitude))}
+                            >
+                                <Text style={styles.mapLink}>Goolge Maps</Text>
+                            </TouchableOpacity>
                         </View>
                     </View>,
                 )
@@ -110,7 +119,6 @@ export function HomeScreen({ navigation }) {
     ) : (
         <PaperProvider>
             <View style={styles.container}>
-
                 <View style={styles.header}>
                     <TouchableOpacity
                         style={styles.userNameTouch}
@@ -144,7 +152,6 @@ export function HomeScreen({ navigation }) {
                         </TouchableOpacity>
                     </View>)
                 }
-
             </View>
         </PaperProvider>
     );
@@ -173,15 +180,32 @@ const styles = StyleSheet.create({
         fontSize: 18,
         color: '#788eec'
     },
+    title: {
+        marginLeft: 10
+    },
+    imageContainer: {
+        marginTop: 20,
+        marginBottom: 20
+    },
     postsContainer: {
+        marginBottom: 30,
+        marginTop: 10,
+        borderBottomWidth: 1,
+        borderColor: 'gray'
+    },
+    postsContainerBottom: {
         marginLeft: 20,
         marginRight: 20,
-        marginBottom: 30
+        marginBottom: 30,
+        marginTop: 10
     },
-    imageBox: {
-        flex: 1,
-        width: 300,
-        height: 300
+    postsContainerTop: {
+        marginLeft: 20,
+        marginRight: 20,
+        marginBottom: 10
+    },
+    mapLink: {
+        color: '#788eec'
     }
 })
 
