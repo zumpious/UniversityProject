@@ -10,6 +10,7 @@ export function ProfilScreen({ navigation }) {
 const [loading, setLoading] = useState(false);
 const [userData, setUserData] = useState('');
 const [postsCount, setPostsCount] = useState(0);
+const [friendsCount, setFriendsCount] = useState(0)
 
 const user = useContext(AuthContext);
 
@@ -32,6 +33,7 @@ useEffect(() =>  {
                         .then(firestoreDocument => {
                             const data = firestoreDocument.data();
                             setUserData(data);
+                            setPostsCount(data.posts.length);
                             setLoading(false)
                         })
                 },2500)
@@ -40,6 +42,7 @@ useEffect(() =>  {
             const data = firestoreDocument.data()
             setUserData(data);
             setPostsCount(data.posts.length);
+            setFriendsCount(data.friends.length);
         })
         //ToDo implement error handling
         .catch(error => {
@@ -70,7 +73,10 @@ return loading ? (
             <View style={styles.body}>
                 <Text style={styles.text}>Name: { userData.name }</Text>
                 <Text style={styles.text}>Email: { userData.email }</Text>
-                <Text style={styles.text}>Number of posts: {postsCount}</Text>
+                <Text style={styles.text}>Nickname: { userData.nickname ? userData.nickname : "not created yet" }</Text>
+                <Text style={styles.text}>Bio: { userData.bio ? userData.bio : "not created yet" }</Text>
+                <Text style={styles.text}>Posts: {postsCount}</Text>
+                <Text style={styles.text}>Friends: {friendsCount}</Text>
             </View>
         </View>
     </PaperProvider>
