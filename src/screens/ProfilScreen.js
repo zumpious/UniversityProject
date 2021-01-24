@@ -41,14 +41,20 @@ useEffect(() =>  {
             }
             const data = firestoreDocument.data()
             setUserData(data);
-            setPostsCount(data.posts.length);
-            setFriendsCount(data.friends.length);
+
+            if (data.posts != null) {
+                setPostsCount(data.posts.length);
+            }
+
+            if (data.friends != null ) {
+                setFriendsCount(data.friends.length);
+            }
         })
         //ToDo implement error handling
         .catch(error => {
             console.log('Something went wrong fetching user data from firestore:  ', error);
         });
-});
+}, []);
 
 return loading ? (
     <LoadingScreen />

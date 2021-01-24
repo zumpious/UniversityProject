@@ -66,13 +66,14 @@ export function HomeScreen({ navigation }) {
 
     //get firestore posts object and subscribe on refreshing state
     useEffect(() => {
+        let mounted = true;
         entityRef
             .onSnapshot(documentSnapshot => {
-                if(documentSnapshot.get('posts') != null) {
+                if(documentSnapshot.get('posts') != null && mounted) {
                     setPosts(documentSnapshot.data().posts)
                 }
             });
-
+        return () => mounted = false;
     },[refreshing])
 
     // get data from posts object and transform data into view
