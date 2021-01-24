@@ -66,7 +66,11 @@ export default function RegistrationScreen({navigation}) {
                     id: uid,
                     email: email,
                     name: fullName,
-                    posts: null
+                    posts: null,
+                    friends: null,
+                    profilPicture: null,
+                    nickname: null,
+                    bio: null,
                 };
                 firestore()
                     .collection('Users')
@@ -74,7 +78,7 @@ export default function RegistrationScreen({navigation}) {
                         .set(data)
                     .catch((error) => {
                         //ToDo add error handling
-                        alert(error)
+                        console.log("An error occured while creating a user: ", error);
                     });
             })
             .catch((err) => {

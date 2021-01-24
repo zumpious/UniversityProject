@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Button, Provider as PaperProvider} from "react-native-paper";
 import auth from "@react-native-firebase/auth";
 import {AuthContext} from "../navigation/AuthNavigator";
@@ -7,8 +7,9 @@ import firestore from "@react-native-firebase/firestore";
 import LoadingScreen from "./animations/LoadingScreen";
 
 export function ProfilScreen({ navigation }) {
-const [loading, setLoading] = useState(false)
-const [userName, setUserName] = useState('')
+const [loading, setLoading] = useState(false);
+const [userData, setUserData] = useState('');
+const [postsCount, setPostsCount] = useState(0);
 
 const user = useContext(AuthContext);
 
@@ -29,19 +30,20 @@ useEffect(() =>  {
                         .doc(uid)
                         .get()
                         .then(firestoreDocument => {
-                            const data = firestoreDocument.data()
-                            setUserName(data.name);
+                            const data = firestoreDocument.data();
+                            setUserData(data);
                             setLoading(false)
                         })
                 },2500)
                 return;
             }
             const data = firestoreDocument.data()
-            setUserName(data.name);
+            setUserData(data);
+            setPostsCount(data.posts.length);
         })
         //ToDo implement error handling
         .catch(error => {
-            alert(error)
+            console.log('Something went wrong fetching user data from firestore:  ', error);
         });
 });
 
@@ -50,23 +52,25 @@ return loading ? (
 ) : (
     <PaperProvider>
         <View style={styles.container}>
-            <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                <Text style={styles.text}>{ userName }</Text>
-                <Button
-                    mode="contained"
-                    color="#788eec"
-                    labelStyle={{color: "white"}}
+            <View style={styles.header}>
+                <TouchableOpacity
+                    style={styles.userNameTouch}
                     onPress={() => {
                         auth()
                             .signOut()
                             .then(() => {
                             })
                             .catch((error) => {
-                                alert(error);
-                            });
+                                console.log('Something went wrong signing out', error);
+                            })
                     }}>
-                    Log Out
-                </Button>
+                    <Text style={styles.userNameText}>Log Out</Text>
+                </TouchableOpacity>
+            </View>
+            <View style={styles.body}>
+                <Text style={styles.text}>Name: { userData.name }</Text>
+                <Text style={styles.text}>Email: { userData.email }</Text>
+                <Text style={styles.text}>Number of posts: {postsCount}</Text>
             </View>
         </View>
     </PaperProvider>
@@ -76,13 +80,29 @@ return loading ? (
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center'
+    },
+    header: {
+        borderBottomWidth: 1,
+        borderColor: 'gray'
+    },
+    userNameTouch: {
+        alignItems: 'flex-end',
+        marginTop: 30,
+        marginRight: 30,
+        marginBottom: 30,
+    },
+    userNameText: {
+        fontSize: 18,
+        color: '#788eec'
     },
     text: {
         fontSize: 18,
         paddingBottom: 12
-    }
+    },
+    body: {
+        marginLeft: 30,
+        marginTop: 30
+    },
 })
 
 export default ProfilScreen;
