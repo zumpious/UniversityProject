@@ -1,12 +1,12 @@
 import React, {useContext, useState, useEffect} from 'react';
-import { DefaultTheme, Button, Provider as PaperProvider } from 'react-native-paper';
+import { Title, Provider as PaperProvider } from 'react-native-paper';
 import {View, Text, StyleSheet, TouchableOpacity, ScrollView, RefreshControl,Dimensions, Linking} from 'react-native';
 import { AuthContext } from "../navigation/AuthNavigator";
 import firestore from "@react-native-firebase/firestore";
 import Image from "react-native-scalable-image";
 import LoadingScreen from "./animations/LoadingScreen";
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
-import {getGpsURL, openGps} from "../helpers/helpers";
+import {getGpsURL} from "../helpers/helpers";
 
 const wait = (timeout) => {
     return new Promise(resolve => {
@@ -48,15 +48,15 @@ export function HomeScreen({ navigation }) {
                         entityRef
                             .get()
                             .then(firestoreDocument => {
-                                const data = firestoreDocument.data()
+                                const data = firestoreDocument.data();
                                 setUserName(data.name);
-                                setLoading(false)
+                                setLoading(false);
                             })
                             .catch((e) => console.log('An error occurred getting a firestore document: ', e))
                     },2500)
                     return;
                 }
-                const data = firestoreDocument.data()
+                const data = firestoreDocument.data();
                 setUserName(data.name);
             })
             .catch((e) => console.log('An error occurred getting a firestore document: ', e));
@@ -86,10 +86,10 @@ export function HomeScreen({ navigation }) {
                 data.unshift(
                     <View key={index} style={styles.postsContainer}>
                         <View style={styles.postsContainerTop}>
-                            <Text styles={styles.title} id={item.title}>{item.title}</Text>
+                            <Title styles={styles.title} id={item.title}>{item.title}</Title>
                         </View>
                         {item.image ?
-                            <View styles={styles.imageContainer}>
+                            <View>
                                 <Image
                                     width={window.width}
                                     source={item.image && {uri: item.image}}
@@ -180,31 +180,28 @@ const styles = StyleSheet.create({
         color: '#788eec'
     },
     title: {
-        marginLeft: 10
-    },
-    imageContainer: {
-        marginTop: 20,
-        marginBottom: 20
+        marginLeft: 10,
+        fontWeight: "600",
+        fontSize: 30
     },
     postsContainer: {
-        marginBottom: 30,
-        marginTop: 10,
-        borderBottomWidth: 1,
-        borderColor: 'gray'
-    },
-    postsContainerBottom: {
-        marginLeft: 20,
-        marginRight: 20,
-        marginBottom: 30,
-        marginTop: 10
+
     },
     postsContainerTop: {
         marginLeft: 20,
         marginRight: 20,
+        marginTop: 20,
         marginBottom: 10
     },
+    postsContainerBottom: {
+        marginLeft: 20,
+        marginRight: 20,
+        marginTop: 10,
+        marginBottom: 20
+    },
     mapLink: {
-        color: '#788eec'
+        color: '#788eec',
+        marginTop: 10
     }
 })
 
