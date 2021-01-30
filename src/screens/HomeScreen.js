@@ -45,9 +45,7 @@ export function HomeScreen({ navigation }) {
                 if (!firestoreDocument.exists) {
                     setLoading(true);
                     setTimeout(() => {
-                        firestore()
-                            .collection('Users')
-                            .doc(uid)
+                        entityRef
                             .get()
                             .then(firestoreDocument => {
                                 const data = firestoreDocument.data()

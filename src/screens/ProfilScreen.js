@@ -7,86 +7,85 @@ import firestore from "@react-native-firebase/firestore";
 import LoadingScreen from "./animations/LoadingScreen";
 
 export function ProfilScreen({ navigation }) {
-const [loading, setLoading] = useState(false);
-const [userData, setUserData] = useState('');
-const [postsCount, setPostsCount] = useState(0);
-const [friendsCount, setFriendsCount] = useState(0)
+    const [loading, setLoading] = useState(false);
+    const [userData, setUserData] = useState('');
+    const [postsCount, setPostsCount] = useState(0);
 
-const user = useContext(AuthContext);
-
-useEffect(() =>  {
+    const user = useContext(AuthContext);
     const uid = user.uid
-    firestore()
-        .collection('Users')
-        .doc(uid)
-        .get()
-        .then(firestoreDocument => {
-            // TODO remove setTimeout()
-            // This was only added because after registration the firestore document might not be created yet and therefor can't be fetched immediately
-            if (!firestoreDocument.exists) {
-                setLoading(true);
-                setTimeout(() => {
-                    firestore()
-                        .collection('Users')
-                        .doc(uid)
-                        .get()
-                        .then(firestoreDocument => {
-                            const data = firestoreDocument.data();
-                            setUserData(data);
-                            setPostsCount(data.posts.length);
-                            setLoading(false)
-                        })
-                },2500)
-                return;
-            }
-            const data = firestoreDocument.data()
-            setUserData(data);
+    const entityRef = firestore().collection('Users').doc(uid);
 
-            if (data.posts != null) {
-                setPostsCount(data.posts.length);
-            }
-
-            if (data.friends != null ) {
-                setFriendsCount(data.friends.length);
-            }
-        })
-        //ToDo implement error handling
-        .catch(error => {
-            console.log('Something went wrong fetching user data from firestore:  ', error);
-        });
-}, []);
-
-return loading ? (
-    <LoadingScreen />
-) : (
-    <PaperProvider>
-        <View style={styles.container}>
-            <View style={styles.header}>
-                <TouchableOpacity
-                    style={styles.userNameTouch}
-                    onPress={() => {
-                        auth()
-                            .signOut()
-                            .then(() => {
+    useEffect(() =>  {
+        entityRef
+            .get()
+            .then(firestoreDocument => {
+                // TODO remove setTimeout()
+                // This was only added because after registration the firestore document might not be created yet and therefor can't be fetched immediately
+                if (!firestoreDocument.exists) {
+                    setLoading(true);
+                    setTimeout(() => {
+                        entityRef
+                            .get()
+                            .then(firestoreDocument => {
+                                const data = firestoreDocument.data();
+                                setUserData(data);
+                                setLoading(false)
                             })
-                            .catch((error) => {
-                                console.log('Something went wrong signing out', error);
-                            })
-                    }}>
-                    <Text style={styles.userNameText}>Log Out</Text>
-                </TouchableOpacity>
+                    },2500)
+                    return;
+                }
+                const data = firestoreDocument.data()
+                setUserData(data);
+            })
+            //ToDo implement error handling
+            .catch(error => {
+                console.log('Something went wrong fetching user data from firestore:  ', error);
+            });
+    }, []);
+
+    //get firestore posts object to print posts count
+    useEffect(() => {
+        let mounted = true;
+        entityRef
+            .onSnapshot(documentSnapshot => {
+                if(documentSnapshot.get('posts') != null && mounted) {
+                    setPostsCount(documentSnapshot.data().posts.length)
+                }
+            });
+        return () => mounted = false;
+    },[])
+
+    return loading ? (
+        <LoadingScreen />
+    ) : (
+        <PaperProvider>
+            <View style={styles.container}>
+                <View style={styles.header}>
+                    <TouchableOpacity
+                        style={styles.userNameTouch}
+                        onPress={() => {
+                            auth()
+                                .signOut()
+                                .then(() => {
+                                })
+                                .catch((error) => {
+                                    console.log('Something went wrong signing out', error);
+                                })
+                        }}>
+                        <Text style={styles.userNameText}>Log Out</Text>
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.body}>
+                    <Text style={styles.text}>Name: { userData.name }</Text>
+                    <Text style={styles.text}>Email: { userData.email }</Text>
+                    <Text style={styles.text}>Nickname: { userData.nickname ? userData.nickname : "not created yet" }</Text>
+                    <Text style={styles.text}>Bio: { userData.bio ? userData.bio : "not created yet" }</Text>
+                    <Text style={styles.text}>Posts: { postsCount }</Text>
+                    <Text style={styles.text}>Friends: { userData.friends ? userData.friends.length : '0' }</Text>
+                </View>
             </View>
-            <View style={styles.body}>
-                <Text style={styles.text}>Name: { userData.name }</Text>
-                <Text style={styles.text}>Email: { userData.email }</Text>
-                <Text style={styles.text}>Nickname: { userData.nickname ? userData.nickname : "not created yet" }</Text>
-                <Text style={styles.text}>Bio: { userData.bio ? userData.bio : "not created yet" }</Text>
-                <Text style={styles.text}>Posts: {postsCount}</Text>
-                <Text style={styles.text}>Friends: {friendsCount}</Text>
-            </View>
-        </View>
-    </PaperProvider>
-);
+        </PaperProvider>
+    );
 }
 
 const styles = StyleSheet.create({
