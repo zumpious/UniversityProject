@@ -72,7 +72,7 @@ export function LoginScreen({navigation}) {
                 keyboardShouldPersistTaps="always">
                 <TextInput
                     style={emailErr ? styles.inputRed : styles.input}
-                    placeholder='E-Mail'
+                    placeholder="E-Mail"
                     placeholderTextColor="#aaaaaa"
                     onChangeText={(text) => setEmail(text)}
                     value={email}
@@ -83,12 +83,12 @@ export function LoginScreen({navigation}) {
                     style={passwordErr ? styles.inputRed : styles.input}
                     placeholderTextColor="#aaaaaa"
                     secureTextEntry
-                    placeholder='Password'
+                    placeholder="Password"
                     onChangeText={(text) => setPassword(text)}
                     value={password}
                     underlineColorAndroid="transparent"
                     autoCapitalize="none"
-                />
+                    />
                 <TouchableOpacity
                     style={styles.button}
                     onPress={() => onLoginPress()}>
@@ -106,16 +106,14 @@ export function LoginScreen({navigation}) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center'
-    },
-    title: {
-
+        alignItems: 'center',
+        backgroundColor: 'white'
     },
     logo: {
         flex: 1,
         height: 120,
         width: 90,
-        alignSelf: "center",
+        alignSelf: 'center',
         margin: 30
     },
     input: {
@@ -128,6 +126,8 @@ const styles = StyleSheet.create({
         marginLeft: 30,
         marginRight: 30,
         paddingLeft: 16,
+        borderWidth: 1,
+        borderColor: 'gray'
     },
     inputRed: {
         height: 48,
@@ -149,17 +149,17 @@ const styles = StyleSheet.create({
         marginTop: 20,
         height: 48,
         borderRadius: 5,
-        alignItems: "center",
+        alignItems: 'center',
         justifyContent: 'center'
     },
     buttonTitle: {
         color: 'white',
         fontSize: 16,
-        fontWeight: "bold"
+        fontWeight: 'bold'
     },
     footerView: {
         flex: 1,
-        alignItems: "center",
+        alignItems: 'center',
         marginTop: 20
     },
     footerText: {
@@ -167,8 +167,8 @@ const styles = StyleSheet.create({
         color: '#2e2e2d'
     },
     footerLink: {
-        color: "#788eec",
-        fontWeight: "bold",
+        color: '#788eec',
+        fontWeight: 'bold',
         fontSize: 16
     },
     errorText: {

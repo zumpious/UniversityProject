@@ -106,13 +106,13 @@ export function CreatePostScreen({ navigation }) {
             }
         };
         ImagePicker.showImagePicker(options, response => {
-            console.log('Response = ', response);
+            console.log("Response = ", response);
             if (response.didCancel) {
-                console.log('User cancelled image picker');
+                console.log("User cancelled image picker");
             } else if (response.error) {
-                console.log('ImagePicker Error: ', response.error);
+                console.log("ImagePicker Error: ", response.error);
             } else if (response.customButton) {
-                console.log('User tapped custom button: ', response.customButton);
+                console.log("User tapped custom button: ", response.customButton);
             } else {
                 const source = {uri: response.uri};
                 setImage(source);
@@ -164,7 +164,7 @@ export function CreatePostScreen({ navigation }) {
                     console.log("snapshot: " + snapshot);
                 },
                 error => {
-                    console.log('uploading image error => ' + error);
+                    console.log("uploading image error => " + error);
                 },
                 () => {
                     storage()
@@ -192,9 +192,9 @@ export function CreatePostScreen({ navigation }) {
                                     posts: firestore.FieldValue.arrayUnion(post),
                                 })
                                 .then(() => {
-                                    console.log('post added to Users document')
+                                    console.log("post added to Users document")
                                 })
-                                .catch((e) => console.log('An error occurred uploading the image: ', e));
+                                .catch((e) => console.log("An error occurred uploading the image: ", e));
 
                             //reset the states
                             setTitle(null);
@@ -238,9 +238,9 @@ export function CreatePostScreen({ navigation }) {
                     posts: firestore.FieldValue.arrayUnion(post),
                 })
                 .then(() => {
-                    console.log('Post added to Users document')
+                    console.log("Post added to Users document")
                 })
-                .catch((e) => console.log('An error occurred posting data to firestore document: ', e));
+                .catch((e) => console.log("An error occurred posting data to firestore document: ", e));
 
             //reset states
             setTitle(null);
@@ -275,7 +275,7 @@ export function CreatePostScreen({ navigation }) {
                 <Title style={styles.title}>Title</Title>
                 <TextInput
                     style={titleErr ? styles.inputRed : styles.input}
-                    placeholder='Title'
+                    placeholder="Title"
                     placeholderTextColor="#aaaaaa"
                     onChangeText={(text) => setTitle(text)}
                     value={title}
@@ -286,7 +286,7 @@ export function CreatePostScreen({ navigation }) {
                 <Title style={styles.title}>Description</Title>
                 <TextInput
                     style={desrciptionErr ? [styles.inputRed, styles.description] : [styles.input, styles.description]}
-                    placeholder='Description'
+                    placeholder="Description"
                     placeholderTextColor="#aaaaaa"
                     onChangeText={(text) => setDescription(text)}
                     value={description}
@@ -344,7 +344,7 @@ export function CreatePostScreen({ navigation }) {
                 <TouchableOpacity
                     style={[styles.buttonTall, styles.submitPost]}
                     onPress={submitPost}>
-                    <Text style={styles.buttonTitle}>Submit Post  </Text>
+                    <Text style={styles.buttonTitleLong}>Submit Post  </Text>
                 </TouchableOpacity>
 
             </KeyboardAwareScrollView>
@@ -355,7 +355,8 @@ export function CreatePostScreen({ navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center'
+        alignItems: 'center',
+        backgroundColor: 'white'
     },
     title: {
         borderRadius: 5,
@@ -374,7 +375,9 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         marginLeft: 30,
         marginRight: 30,
-        paddingLeft: 16
+        paddingLeft: 16,
+        borderWidth: 1,
+        borderColor: 'gray'
     },
     inputRed: {
         height: 48,
@@ -395,15 +398,17 @@ const styles = StyleSheet.create({
         marginBottom: 30
     },
     buttonSmall: {
-        backgroundColor: '#ebbc86',
+        backgroundColor: '#fff',
         marginTop: 10,
         marginBottom: 30,
         marginLeft: 30,
         height: 42,
         borderRadius: 5,
-        alignItems: "center",
+        alignItems: 'center',
         justifyContent: 'center',
-        width: '40%'
+        width: '40%',
+        borderWidth: 1,
+        borderColor: '#788eec'
     },
     buttonTall: {
         backgroundColor: '#788eec',
@@ -412,14 +417,19 @@ const styles = StyleSheet.create({
         marginBottom: 40,
         height: 52,
         borderRadius: 5,
-        alignItems: "center",
+        alignItems: 'center',
         justifyContent: 'center',
         width: '100%'
     },
     buttonTitle: {
-        color: 'white',
+        color: '#788eec',
         fontSize: 16,
-        fontWeight: "bold"
+        fontWeight: 'bold',
+    },
+    buttonTitleLong: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: 'bold'
     },
     progressBarContainer: {
         marginTop: 20,

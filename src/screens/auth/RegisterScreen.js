@@ -116,7 +116,7 @@ export default function RegistrationScreen({navigation}) {
                 keyboardShouldPersistTaps="always">
                 <TextInput
                     style={fullNameErr ? styles.inputRed : styles.input}
-                    placeholder='Full Name'
+                    placeholder="Full Name"
                     placeholderTextColor="#aaaaaa"
                     onChangeText={(text) => setFullName(text)}
                     value={fullName}
@@ -125,7 +125,7 @@ export default function RegistrationScreen({navigation}) {
                 />
                 <TextInput
                     style={emailErr ? styles.inputRed : styles.input}
-                    placeholder='E-Mail'
+                    placeholder="E-Mail"
                     placeholderTextColor="#aaaaaa"
                     onChangeText={(text) => setEmail(text)}
                     value={email}
@@ -136,7 +136,7 @@ export default function RegistrationScreen({navigation}) {
                     style={passwordErr ? styles.inputRed : styles.input}
                     placeholderTextColor="#aaaaaa"
                     secureTextEntry
-                    placeholder='Password'
+                    placeholder="Password"
                     onChangeText={(text) => setPassword(text)}
                     value={password}
                     underlineColorAndroid="transparent"
@@ -146,7 +146,7 @@ export default function RegistrationScreen({navigation}) {
                     style={confirmPasswordErr ? styles.inputRed : styles.input}
                     placeholderTextColor="#aaaaaa"
                     secureTextEntry
-                    placeholder='Confirm Password'
+                    placeholder="Confirm Password"
                     onChangeText={(text) => setConfirmPassword(text)}
                     value={confirmPassword}
                     underlineColorAndroid="transparent"
@@ -169,7 +169,8 @@ export default function RegistrationScreen({navigation}) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center'
+        alignItems: 'center',
+        backgroundColor: 'white'
     },
     title: {
 
@@ -178,7 +179,7 @@ const styles = StyleSheet.create({
         flex: 1,
         height: 120,
         width: 90,
-        alignSelf: "center",
+        alignSelf: 'center',
         margin: 30
     },
     input: {
@@ -190,7 +191,9 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         marginLeft: 30,
         marginRight: 30,
-        paddingLeft: 16
+        paddingLeft: 16,
+        borderWidth: 1,
+        borderColor: 'gray'
     },
     inputRed: {
         height: 48,
@@ -212,7 +215,7 @@ const styles = StyleSheet.create({
         marginTop: 20,
         height: 48,
         borderRadius: 5,
-        alignItems: "center",
+        alignItems: 'center',
         justifyContent: 'center'
     },
     buttonTitle: {
@@ -222,7 +225,7 @@ const styles = StyleSheet.create({
     },
     footerView: {
         flex: 1,
-        alignItems: "center",
+        alignItems: 'center',
         marginTop: 20
     },
     footerText: {
@@ -230,8 +233,8 @@ const styles = StyleSheet.create({
         color: '#2e2e2d'
     },
     footerLink: {
-        color: "#788eec",
-        fontWeight: "bold",
+        color: '#788eec',
+        fontWeight: 'bold',
         fontSize: 16
     },
     errorText: {

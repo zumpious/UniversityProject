@@ -24,12 +24,13 @@ export function LoadingScreen(props) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: "center",
-        alignItems: "center"
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'white'
     },
     horizontal: {
-        flexDirection: "row",
-        justifyContent: "flex-start",
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
         padding: 10
     }
 });

@@ -52,14 +52,14 @@ export function HomeScreen({ navigation }) {
                                 setUserName(data.name);
                                 setLoading(false);
                             })
-                            .catch((e) => console.log('An error occurred getting a firestore document: ', e))
+                            .catch((e) => console.log("An error occurred getting a firestore document: ", e))
                     },2500)
                     return;
                 }
                 const data = firestoreDocument.data();
                 setUserName(data.name);
             })
-            .catch((e) => console.log('An error occurred getting a firestore document: ', e));
+            .catch((e) => console.log("An error occurred getting a firestore document: ", e));
     }, []);
 
     //get firestore posts object and subscribe on refreshing state
@@ -159,6 +159,7 @@ export function HomeScreen({ navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: '#fff'
     },
     header: {
         borderBottomWidth: 1,
@@ -181,7 +182,7 @@ const styles = StyleSheet.create({
     },
     title: {
         marginLeft: 10,
-        fontWeight: "600",
+        fontWeight: '600',
         fontSize: 30
     },
     postsContainer: {

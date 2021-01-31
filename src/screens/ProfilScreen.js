@@ -39,7 +39,7 @@ export function ProfilScreen({ navigation }) {
             })
             //ToDo implement error handling
             .catch(error => {
-                console.log('Something went wrong fetching user data from firestore:  ', error);
+                console.log("Something went wrong fetching user data from firestore:  ", error);
             });
     }, []);
 
@@ -69,7 +69,7 @@ export function ProfilScreen({ navigation }) {
                                 .then(() => {
                                 })
                                 .catch((error) => {
-                                    console.log('Something went wrong signing out', error);
+                                    console.log("Something went wrong signing out", error);
                                 })
                         }}>
                         <Text style={styles.userNameText}>Log Out</Text>
@@ -91,6 +91,7 @@ export function ProfilScreen({ navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: 'white'
     },
     header: {
         borderBottomWidth: 1,
