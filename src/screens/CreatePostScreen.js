@@ -1,12 +1,14 @@
 import React, {useContext, useState} from 'react';
-import {Text,
-        View,
-        PermissionsAndroid,
-        StyleSheet,
-        TextInput,
-        TouchableOpacity,
-        Image,
-        SafeAreaView} from 'react-native';
+import {
+    Text,
+    View,
+    PermissionsAndroid,
+    StyleSheet,
+    TextInput,
+    TouchableOpacity,
+    SafeAreaView,
+    Dimensions
+} from 'react-native';
 import {Title} from "react-native-paper";
 import Geolocation from 'react-native-geolocation-service';
 import ImagePicker from 'react-native-image-picker';
@@ -14,6 +16,7 @@ import {createUUIDv4} from "../helpers/helpers";
 import {AuthContext} from '../navigation/AuthNavigator';
 import storage from '@react-native-firebase/storage';
 import firestore from '@react-native-firebase/firestore';
+import Image from "react-native-scalable-image";
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 import LoadingScreen from "./animations/LoadingScreen";
 
@@ -36,6 +39,7 @@ export function CreatePostScreen({ navigation }) {
     });
 
     //Handle image upload state vars
+    const window = Dimensions.get('window');
     const [image, setImage] = useState(null);
     const [uploading, setUploading] = useState(false);
 
@@ -331,7 +335,7 @@ export function CreatePostScreen({ navigation }) {
                     </TouchableOpacity>
                     <View>
                         {image !== null ?
-                            (<Image source={{uri: image.uri}} style={styles.imageBox} />) :
+                            (<Image source={{uri: image.uri}} width={window.width} />) :
                             null
                         }
                     </View>
@@ -416,11 +420,6 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 16,
         fontWeight: "bold"
-    },
-    imageBox: {
-        marginLeft: 30,
-        width: 300,
-        height: 300
     },
     progressBarContainer: {
         marginTop: 20,
