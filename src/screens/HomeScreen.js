@@ -14,6 +14,8 @@ const wait = (timeout) => {
     });
 }
 
+
+//MAIN TASK
 //ToDo implement advanced error handling
 //ToDo split code into smaller components
 export function HomeScreen({ navigation }) {

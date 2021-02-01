@@ -4,6 +4,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 
+//SMALL TASK
 //ToDo add USERNAME input
 export default function RegistrationScreen({navigation}) {
     const [fullName, setFullName] = useState(null);

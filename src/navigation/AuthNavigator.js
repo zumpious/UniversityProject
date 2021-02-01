@@ -6,6 +6,7 @@ import LoadingScreen from "../screens/animations/LoadingScreen";
 
 export const AuthContext = createContext(null)
 
+//SMALL TASK
 export default function AuthNavigator() {
     const [initializing, setInitializing] = useState(true)
     const [user, setUser] = useState(null)

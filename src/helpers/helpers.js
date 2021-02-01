@@ -1,3 +1,5 @@
+//MAIN TASK
+
 //create a uuidv4 to pass a uniqu ID to every post created by the user
 export function createUUIDv4() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {

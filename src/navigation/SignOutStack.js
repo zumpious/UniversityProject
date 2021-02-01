@@ -6,6 +6,7 @@ import RegisterScreen from "../screens/auth/RegisterScreen";
 
 const Stack = createStackNavigator();
 
+// SMALL TASK
 export default function SignOutStack() {
     return (
         <NavigationContainer>

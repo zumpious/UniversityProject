@@ -9,6 +9,7 @@ import CreatePostScreen from "../screens/CreatePostScreen";
 
 const Tab = createBottomTabNavigator();
 
+//MAIN TASK
 export default function SignInTab() {
 
     return(

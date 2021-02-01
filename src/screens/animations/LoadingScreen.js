@@ -2,6 +2,7 @@ import React from 'react';
 import * as Progress from 'react-native-progress';
 import {View, StyleSheet, Text} from 'react-native';
 
+//USED IN SMALL AND MAIN TASK
 //ToDo make Loading Animation more interesting and CD fitting
 export function LoadingScreen(props) {
     return (

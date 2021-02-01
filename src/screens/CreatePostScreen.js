@@ -20,6 +20,8 @@ import Image from "react-native-scalable-image";
 import {KeyboardAwareScrollView} from "react-native-keyboard-aware-scroll-view";
 import LoadingScreen from "./animations/LoadingScreen";
 
+
+//MAIN TASK
 //ToDo split code into smaller components
 //ToDo handle app behavior without internet connection
 //ToDo remove console.logs and implement advanced error handling to every function

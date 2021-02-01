@@ -6,6 +6,8 @@ import {AuthContext} from "../navigation/AuthNavigator";
 import firestore from "@react-native-firebase/firestore";
 import LoadingScreen from "./animations/LoadingScreen";
 
+
+//MAIN TASK
 export function ProfilScreen({ navigation }) {
     const [loading, setLoading] = useState(false);
     const [userData, setUserData] = useState('');

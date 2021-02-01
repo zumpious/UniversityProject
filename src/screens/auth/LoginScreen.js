@@ -3,6 +3,7 @@ import { Text, TextInput, TouchableOpacity, View, StyleSheet } from 'react-nativ
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import auth from '@react-native-firebase/auth';
 
+//SMALL TASK
 export function LoginScreen({navigation}) {
     const [email, setEmail] = useState(null);
     const [password, setPassword] = useState(null);
