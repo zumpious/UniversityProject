@@ -1,4 +1,4 @@
-#Setup development environment
+# Setup development environment
 
 ### Requirements to run this project
 - yarn as package manager installed
@@ -11,7 +11,12 @@
 ### Starting the project: 
 
 1.Clone this repo to your machine
-2.Make sure you have all requirements installed and setup. You can find a basic toturial on how to setup React Native on your OS here: https://reactnative.dev/docs/environment-setup
+```bash
+git clone https://github.com/zumpious/UniversityProject.git
+```
+2.Make sure you have all requirements installed and setup. You can find a basic toturial on how to setup React Native on your OS here: https://reactnative.dev/docs/environment-setup  
+
+
 3.After installation you need to install all project specific dependencies. Therefor move into the root directory of the project and run:
 ```bash
 yarn install
