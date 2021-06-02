@@ -1,3 +1,6 @@
+# What is MyPlaces?
+MyPlaces provides an mobile-platform created in react native, aim to allow its user to save, document and share their favorite playes to be. Consequently people are able to create and provide geographical networks of beautiful places, bars and so on. It helps people to chose what to do today or finding the best fitting place to be, for whatever is planned today.
+
 # Setup development environment
 
 ### Requirements to run this project
